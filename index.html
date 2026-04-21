@@ -36,7 +36,7 @@
     <!-- Google Fonts (preconnect for speed) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -795,167 +795,270 @@
             text-align: center;
         }
 
-        /* Share Card - Instagram Square Format */
+        /* ── Share Card 1080×1080 — off-screen, captured by html2canvas ── */
         .share-card {
-            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-            border-radius: 20px;
-            padding: 35px 30px;
-            margin: 20px 0;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-            border: none;
-            aspect-ratio: 1 / 1;
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 1080px;
+            height: 1080px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            position: relative;
             overflow: hidden;
+            font-family: 'DM Sans', sans-serif;
         }
-
-        .share-card::before {
+        .sc-top-bar {
+            height: 60px;
+            background: #1c1c1c;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            flex-shrink: 0;
+        }
+        .sc-visit {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.75);
+        }
+        .sc-top-sponsor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sc-top-sponsor-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.55);
+        }
+        .sc-top-pipe {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.18);
+        }
+        .sc-top-tq {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 900;
+            color: #f97316;
+        }
+        .sc-main {
+            flex: 1;
+            background: linear-gradient(168deg, #2ecc71 0%, #25b35e 38%, #1a9148 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 64px 28px;
+            overflow: hidden;
+            position: relative;
+        }
+        .sc-main::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse 60% 40% at 15% 10%, rgba(255,255,255,0.09) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 85% 88%, rgba(0,0,0,0.09) 0%, transparent 60%);
+            pointer-events: none;
         }
-
-        .sc-top {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 3px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            z-index: 1;
+        .sc-main::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
         }
-        
-        .sc-url-top {
-            font-size: 0.85em;
-            font-weight: 700;
+        .sc-main > * { position: relative; z-index: 1; }
+        .sc-winner-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 6px;
+        }
+        .sc-trophy { font-size: 34px; line-height: 1; }
+        .sc-winner-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            text-transform: uppercase;
             color: white;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
         }
-        
-        .sc-sponsor-bottom {
-            text-align: center;
-            font-size: 0.75em;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
-            letter-spacing: 1px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            margin-top: 10px;
-            text-transform: uppercase;
-        }
-
-        .sc-winner-badge {
-            font-size: 1.1em;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
-            margin-bottom: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
         .sc-boom {
-            font-size: 3.5em;
+            font-family: 'Syne', sans-serif;
+            font-size: 148px;
             font-weight: 900;
             color: white;
-            letter-spacing: 10px;
-            margin-bottom: 8px;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            line-height: 0.88;
+            letter-spacing: -5px;
+            text-shadow: 0 6px 0 rgba(0,0,0,0.12), 0 14px 32px rgba(0,0,0,0.15);
         }
-
         .sc-game {
-            font-size: 1.3em;
-            color: rgba(255, 255, 255, 0.95);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 17px;
             font-weight: 700;
+            letter-spacing: 9px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.50);
+            margin-top: 8px;
+        }
+        .sc-divider {
+            width: 100%;
+            height: 1px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35) 15%, rgba(255,255,255,0.35) 85%, transparent);
+            margin: 24px 0 26px;
+        }
+        .sc-teams-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            width: 100%;
+        }
+        .sc-team {
+            flex: 1;
+            background: rgba(255,255,255,0.13);
+            border: 1.5px solid rgba(255,255,255,0.22);
+            border-radius: 26px;
+            padding: 28px 28px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.22);
+        }
+        .sc-team.winner {
+            background: rgba(255,255,255,0.20);
+            border-color: rgba(255,255,255,0.55);
+            box-shadow: 0 0 0 4px rgba(255,215,0,0.22), 0 12px 48px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.40);
+        }
+        .sc-team-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 900;
             letter-spacing: 4px;
             text-transform: uppercase;
-        }
-
-        .sc-middle {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 25px 0;
-            position: relative;
-            z-index: 1;
-            flex: 1;
-        }
-
-        .sc-team {
-            text-align: center;
-            flex: 1;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 20px 15px;
-            border-radius: 18px;
-            backdrop-filter: blur(10px);
-        }
-
-        .sc-team-label {
-            font-size: 1.6em;
-            font-weight: 900;
-            margin-bottom: 12px;
             color: white;
-            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
-            letter-spacing: 3px;
         }
-
         .sc-players {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 15px;
-            align-items: center;
+            width: 100%;
         }
-
         .sc-player {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 14px;
-            border-radius: 30px;
-            backdrop-filter: blur(5px);
+            gap: 14px;
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            padding: 10px 16px;
         }
-
-        .sc-player img {
-            width: 70px;
-            height: 70px;
+        .sc-avatar {
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            border: 4px solid white;
+            border: 2px solid rgba(255,255,255,0.45);
+            background: rgba(255,255,255,0.12);
+            flex-shrink: 0;
             object-fit: cover;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-
         .sc-player .name {
-            font-weight: 700;
-            font-size: 1.1em;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
             color: white;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
-
         .sc-big-score {
-            font-size: 6em;
+            font-family: 'Syne', sans-serif;
+            font-size: 88px;
             font-weight: 900;
             color: white;
             line-height: 1;
-            text-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            margin: 10px 0;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
-
+        .sc-vs-wrap { flex-shrink: 0; }
         .sc-vs {
-            font-size: 2.5em;
-            color: white;
+            font-family: 'Syne', sans-serif;
+            font-size: 30px;
             font-weight: 900;
-            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
-            margin: 0 20px;
+            color: rgba(255,255,255,0.80);
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.20);
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sc-bottom-strip {
+            height: 108px;
+            background: #0f1117;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 52px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .sc-bottom-strip::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #f97316 25%, #f97316 75%, transparent);
+        }
+        .sc-bottom-strip::after {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 320px;
+            background: radial-gradient(ellipse at left center, rgba(249,115,22,0.09) 0%, transparent 70%);
+        }
+        .sc-tq-left { display: flex; flex-direction: column; gap: 3px; z-index: 1; }
+        .sc-tq-eyebrow {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.40);
+        }
+        .sc-tq-wordmark {
+            font-family: 'Syne', sans-serif;
+            font-size: 34px;
+            font-weight: 900;
+            color: #f97316;
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+        .sc-tq-pipe { width: 1px; height: 56px; background: rgba(255,255,255,0.08); z-index: 1; }
+        .sc-tq-middle { display: flex; flex-direction: column; gap: 5px; z-index: 1; text-align: center; }
+        .sc-tq-tagline { font-family: 'DM Sans', sans-serif; font-size: 14px; color: rgba(255,255,255,0.50); }
+        .sc-tq-url { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: rgba(249,115,22,0.90); }
+        .sc-tq-right { z-index: 1; }
+        .sc-tq-cta {
+            background: #f97316;
+            color: white;
+            font-family: 'Syne', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            padding: 14px 30px;
+            border-radius: 12px;
+            white-space: nowrap;
+            box-shadow: 0 4px 28px rgba(249,115,22,0.42);
         }
 
         /* Website URL at bottom */
@@ -1499,29 +1602,62 @@
                     <div id="finalScore2">0</div>
                 </div>
 
-                <!-- Share card hidden, only rendered for download -->
-                <div class="share-card" id="shareCard" style="display: none;">
-                    <div class="sc-top">
-                        <div class="sc-url-top">SPONSORED BY: TRADIQUOTE - WWW.TRADIQUOTE.CO.ZA</div>
-                        <div class="sc-winner-badge">🏆 BOOM WINNER 🏆</div>
+                <!-- Share card — off-screen, captured by html2canvas on download -->
+                <div class="share-card" id="shareCard">
+
+                    <div class="sc-top-bar">
+                        <div class="sc-visit">HTTPS://BOOMSCORER.VERCEL.APP — TRACK YOUR GAMES</div>
+                        <div class="sc-top-sponsor">
+                            <div class="sc-top-sponsor-label">Sponsored by</div>
+                            <div class="sc-top-pipe"></div>
+                            <div class="sc-top-tq">TradiQuote</div>
+                        </div>
+                    </div>
+
+                    <div class="sc-main">
+                        <div class="sc-winner-header">
+                            <div class="sc-trophy">🏆</div>
+                            <div class="sc-winner-label">BOOM WINNER</div>
+                            <div class="sc-trophy">🏆</div>
+                        </div>
                         <div class="sc-boom">BOOM!</div>
                         <div class="sc-game" id="scGame"></div>
-                    </div>
-                    
-                    <div class="sc-middle">
-                        <div class="sc-team">
-                            <div class="sc-team-label">TEAM 1</div>
-                            <div class="sc-players" id="scPlayers1"></div>
-                            <div class="sc-big-score" id="scScore1">0</div>
+                        <div class="sc-divider"></div>
+                        <div class="sc-teams-row">
+
+                            <div class="sc-team" id="scTeam1">
+                                <div class="sc-team-label">TEAM 1</div>
+                                <div class="sc-players" id="scPlayers1"></div>
+                                <div class="sc-big-score" id="scScore1">0</div>
+                            </div>
+
+                            <div class="sc-vs-wrap"><div class="sc-vs">VS</div></div>
+
+                            <div class="sc-team" id="scTeam2">
+                                <div class="sc-team-label">TEAM 2</div>
+                                <div class="sc-players" id="scPlayers2"></div>
+                                <div class="sc-big-score" id="scScore2">0</div>
+                            </div>
+
                         </div>
-                        <div class="sc-vs">VS</div>
-                        <div class="sc-team">
-                            <div class="sc-team-label">TEAM 2</div>
-                            <div class="sc-players" id="scPlayers2"></div>
-                            <div class="sc-big-score" id="scScore2">0</div>
+                    </div>
+
+                    <div class="sc-bottom-strip">
+                        <div class="sc-tq-left">
+                            <div class="sc-tq-eyebrow">Proudly sponsored by</div>
+                            <div class="sc-tq-wordmark">TradiQuote</div>
+                        </div>
+                        <div class="sc-tq-pipe"></div>
+                        <div class="sc-tq-middle">
+                            <div class="sc-tq-tagline">Quote on site. Get signed. Collect deposit.</div>
+                            <div class="sc-tq-url">tradiquote.co.za</div>
+                        </div>
+                        <div class="sc-tq-pipe"></div>
+                        <div class="sc-tq-right">
+                            <div class="sc-tq-cta">Start for R10 →</div>
                         </div>
                     </div>
-                    <div class="sc-sponsor-bottom">Sponsored by TradiQuote · tradiquote.co.za</div>
+
                 </div>
 
                 <div class="share-btns">
@@ -2015,6 +2151,10 @@
 
             document.getElementById('scGame').textContent = state.gameType.toUpperCase();
 
+            // Winner gold glow on the correct team card
+            document.getElementById('scTeam1').classList.toggle('winner', winner === 'team1');
+            document.getElementById('scTeam2').classList.toggle('winner', winner === 'team2');
+
             // Players with ACTUAL NAMES
             ['team1', 'team2'].forEach((team, idx) => {
                 const container = document.getElementById(`scPlayers${idx + 1}`);
@@ -2023,7 +2163,7 @@
                     const div = document.createElement('div');
                     div.className = 'sc-player';
                     div.innerHTML = `
-                        ${p.photo ? `<img src="${p.photo}">` : ''}
+                        ${p.photo ? `<img class="sc-avatar" src="${p.photo}">` : '<div class="sc-avatar"></div>'}
                         <div class="name">${p.name}</div>
                     `;
                     container.appendChild(div);
@@ -2046,35 +2186,27 @@
 
         function downloadCard() {
             const card = document.getElementById('shareCard');
-            
-            // Temporarily show the card for capture
-            card.style.display = 'flex';
-            
-            // Use 800x800 instead of 1080x1080 to reduce file size
-            const originalWidth = card.style.width;
-            const originalHeight = card.style.height;
-            card.style.width = '800px';
-            card.style.height = '800px';
-            
-            html2canvas(card, { 
-                backgroundColor: '#00A86B',
-                scale: 1.5,  // Reduced from 2 to save file size
-                width: 800,
-                height: 800,
-                windowWidth: 800,
-                windowHeight: 800,
-                logging: false,
-                useCORS: true
+
+            html2canvas(card, {
+                width:           1080,
+                height:          1080,
+                scale:           1,
+                useCORS:         true,
+                allowTaint:      true,
+                backgroundColor: null,
+                logging:         false
             }).then(canvas => {
-                // Restore original size and hide again
-                card.style.width = originalWidth;
-                card.style.height = originalHeight;
-                card.style.display = 'none';
-                
+                const gameType   = (document.getElementById('scGame')  || {}).textContent || 'BOOM';
+                const winnerEl   = card.querySelector('.sc-team.winner .sc-team-label');
+                const winnerName = winnerEl ? winnerEl.textContent : 'WINNER';
+                const slug = (gameType + '-' + winnerName)
+                                .toLowerCase()
+                                .replace(/\s+/g, '-')
+                                .replace(/[^a-z0-9\-]/g, '');
+
                 const link = document.createElement('a');
-                link.download = `boom-${Date.now()}.jpg`;
-                // Reduce quality to 0.8 to compress file size
-                link.href = canvas.toDataURL('image/jpeg', 0.8);  // Using JPEG with 80% quality
+                link.download = 'boom-winner-' + slug + '.png';
+                link.href = canvas.toDataURL('image/png');
                 link.click();
             });
         }
