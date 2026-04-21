@@ -14,6 +14,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Boom Scorer">
     <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
     <!-- Open Graph (WhatsApp, Facebook, iMessage previews) -->
     <meta property="og:type" content="website">
@@ -97,20 +98,22 @@
 
         /* Ad Zone */
         .ad-zone {
-            background: #F9F9F9;
-            border: 1px solid #E0E0E0;
+            background: #0f1117;
+            border: none;
             padding: 0;
             text-align: center;
-            min-height: 220px;
+            min-height: 210px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            cursor: pointer;
+            position: relative;
         }
 
         .ad-zone iframe {
             width: 100%;
-            height: 220px;
+            height: 210px;
             border: none;
             display: block;
         }
@@ -816,7 +819,6 @@
             width: 200%;
             height: 200%;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            pointer-events: none;
         }
 
         .sc-top {
@@ -839,6 +841,18 @@
             border-bottom: 2px solid rgba(255, 255, 255, 0.2);
         }
         
+        .sc-sponsor-bottom {
+            text-align: center;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 1px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
         .sc-winner-badge {
             font-size: 1.1em;
             font-weight: 700;
@@ -1304,12 +1318,14 @@
         </header>
 
         <!-- Ad Zone Top -->
-        <div class="ad-zone">
-            <iframe src="https://tradiquote.co.za/ads/boomscorer.html"
-                width="100%" height="220" frameborder="0" scrolling="no"
-                sandbox="allow-scripts allow-same-origin"
+        <div class="ad-zone" style="position:relative;">
+            <iframe src="/ad.html"
+                width="100%" height="210" frameborder="0" scrolling="no"
+                sandbox="allow-scripts"
                 loading="lazy"
                 style="border:none;display:block;"></iframe>
+            <div onclick="window.open('https://tradiquote.co.za?utm_source=boomscorer&utm_medium=banner&utm_campaign=game_app','_blank')"
+                 style="position:absolute;inset:0;cursor:pointer;z-index:10;background:transparent;"></div>
         </div>
 
         <!-- Setup Screen -->
@@ -1486,7 +1502,7 @@
                 <!-- Share card hidden, only rendered for download -->
                 <div class="share-card" id="shareCard" style="display: none;">
                     <div class="sc-top">
-                        <div class="sc-url-top">VISIT: HTTPS://BOOMSCORER.FASTBUSINESS.CO.ZA</div>
+                        <div class="sc-url-top">SPONSORED BY: TRADIQUOTE - WWW.TRADIQUOTE.CO.ZA</div>
                         <div class="sc-winner-badge">🏆 BOOM WINNER 🏆</div>
                         <div class="sc-boom">BOOM!</div>
                         <div class="sc-game" id="scGame"></div>
@@ -1505,6 +1521,7 @@
                             <div class="sc-big-score" id="scScore2">0</div>
                         </div>
                     </div>
+                    <div class="sc-sponsor-bottom">Sponsored by TradiQuote · tradiquote.co.za</div>
                 </div>
 
                 <div class="share-btns">
@@ -1516,17 +1533,19 @@
         </div>
 
         <!-- Ad Zone Bottom -->
-        <div class="ad-zone">
-            <iframe src="https://tradiquote.co.za/ads/boomscorer.html"
-                width="100%" height="220" frameborder="0" scrolling="no"
-                sandbox="allow-scripts allow-same-origin"
+        <div class="ad-zone" style="position:relative;">
+            <iframe src="/ad.html"
+                width="100%" height="210" frameborder="0" scrolling="no"
+                sandbox="allow-scripts"
                 loading="lazy"
                 style="border:none;display:block;"></iframe>
+            <div onclick="window.open('https://tradiquote.co.za?utm_source=boomscorer&utm_medium=banner&utm_campaign=game_app','_blank')"
+                 style="position:absolute;inset:0;cursor:pointer;z-index:10;background:transparent;"></div>
         </div>
 
         <footer>
-            <p>&copy; 2026 Boom Scorer | <a href="https://boomscorer.fastbusiness.co.za">boomscorer.fastbusiness.co.za</a></p>
-            <p style="margin-top: 5px; font-size: 0.9em;">Made in South Africa 🇿🇦 | Track Klawerjas & Dominoes</p>
+            <p>&copy; 2026 Boom Scorer | Sponsored by: <a href="https://www.tradiquote.co.za" target="_blank" rel="noopener">TradiQuote - www.tradiquote.co.za</a></p>
+            <p style="margin-top: 5px; font-size: 0.9em;">Made in South Africa 🇿🇦 | Track Klawerjas &amp; Dominoes</p>
         </footer>
     </div>
 

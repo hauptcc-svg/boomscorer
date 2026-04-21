@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradiQuote Ad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f1117;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    cursor: pointer;
+    user-select: none;
+  }
+  .banner {
+    width: 100%;
+    height: 210px;
+    background: #0f1117;
+    position: relative;
+    overflow: hidden;
+  }
+  .glow {
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(249,115,22,0.18) 0%, transparent 70%);
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+  .glow2 {
+    position: absolute;
+    bottom: -60px; left: -30px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(249,115,22,0.08) 0%, transparent 70%);
+    animation: glowPulse 4s ease-in-out infinite reverse;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.15); }
+  }
+  .grid {
+    position: absolute; inset: 0; opacity: 0.03;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .wordmark {
+    position: absolute;
+    top: 10px; left: 14px;
+    z-index: 10;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: #f97316;
+    letter-spacing: 0.2px;
+  }
+  .top-line {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #f97316 40%, #f97316 60%, transparent 100%);
+  }
+  .slides { position: absolute; inset: 0; }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px 20px 32px;
+    opacity: 0;
+    animation: slideLife 13.5s infinite;
+  }
+  .slide:nth-child(1) { animation-delay: 0s; }
+  .slide:nth-child(2) { animation-delay: 4.5s; }
+  .slide:nth-child(3) { animation-delay: 9s; }
+  @keyframes slideLife {
+    0%    { opacity: 0; transform: translateY(10px); }
+    4%    { opacity: 1; transform: translateY(0); }
+    29%   { opacity: 1; transform: translateY(0); }
+    33.3% { opacity: 0; transform: translateY(-8px); }
+    100%  { opacity: 0; transform: translateY(10px); }
+  }
+  .s1-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: #f97316; margin-bottom: 9px;
+  }
+  .s1-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px; font-weight: 900;
+    color: #f1f5f9; text-align: center;
+    line-height: 1.2; letter-spacing: -0.4px;
+    margin-bottom: 9px;
+  }
+  .s1-headline .accent { color: #ef4444; }
+  .s1-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11.5px; color: #94a3b8;
+    text-align: center; line-height: 1.5;
+    max-width: 295px;
+  }
+  .s1-sub strong { color: #f1f5f9; font-weight: 500; }
+  .s2-emoji {
+    font-size: 20px; margin-bottom: 6px; line-height: 1;
+  }
+  .s2-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(249,115,22,0.12);
+    border: 1px solid rgba(249,115,22,0.28);
+    color: #f97316;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 9px;
+  }
+  .s2-pill-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #f97316;
+    animation: glowPulse 1.5s ease-in-out infinite;
+  }
+  .s2-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 900;
+    color: #f1f5f9; text-align: center;
+    line-height: 1.2; letter-spacing: -0.3px;
+    margin-bottom: 9px;
+  }
+  .s2-headline span { color: #f97316; }
+  .s2-outcomes {
+    display: flex; flex-direction: column; gap: 5px; align-items: flex-start;
+  }
+  .s2-out {
+    display: flex; align-items: center; gap: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; color: #94a3b8;
+  }
+  .s2-out-check {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.4);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; color: #22c55e; font-size: 8px; font-weight: 700;
+  }
+  .s3-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: 21px; font-weight: 900;
+    color: #f1f5f9; text-align: center;
+    line-height: 1.1; letter-spacing: -0.5px;
+    margin-bottom: 7px;
+  }
+  .s3-headline span { color: #f97316; }
+  .s3-proof {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10.5px; color: #64748b;
+    text-align: center; margin-bottom: 13px; letter-spacing: 0.1px;
+  }
+  .s3-proof em { color: #94a3b8; font-style: normal; }
+  .s3-row {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .s3-badge {
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #22c55e;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    padding: 6px 12px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .s3-cta {
+    background: #f97316; color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 800;
+    padding: 8px 18px; border-radius: 10px;
+    letter-spacing: -0.2px; white-space: nowrap;
+    box-shadow: 0 0 22px rgba(249,115,22,0.5);
+    animation: ctaPulse 2s ease-in-out infinite;
+  }
+  @keyframes ctaPulse {
+    0%, 100% { box-shadow: 0 0 22px rgba(249,115,22,0.5); }
+    50%       { box-shadow: 0 0 38px rgba(249,115,22,0.7); }
+  }
+  .s3-url {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; color: rgba(249,115,22,0.5);
+    margin-top: 7px; letter-spacing: 0.3px;
+  }
+  .progress-track {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: rgba(255,255,255,0.06);
+  }
+  .progress-bar {
+    height: 2px; background: #f97316; width: 0%;
+    animation: progressFill 4.5s linear infinite;
+  }
+  @keyframes progressFill {
+    0%   { width: 0%; }
+    100% { width: 100%; }
+  }
+</style>
+</head>
+<body onclick="window.open('https://tradiquote.co.za/beta-signup?utm_source=boomscorer&utm_medium=banner&utm_campaign=game_app','_blank')">
+<div class="banner">
+  <div class="glow"></div>
+  <div class="glow2"></div>
+  <div class="grid"></div>
+  <div class="top-line"></div>
+  <div class="wordmark">TradiQuote</div>
+  <div class="slides">
+    <div class="slide">
+      <div class="s1-label">For SA Tradies</div>
+      <div class="s1-headline">
+        You lost that job<br>on <span class="accent">speed.</span><br>Not price.
+      </div>
+      <div class="s1-sub">
+        The other guy quoted <strong>the same day.</strong>
+        You quoted 3 days later. That's why they signed with him.
+      </div>
+    </div>
+    <div class="slide">
+      <div class="s2-emoji">🔧</div>
+      <div class="s2-pill"><div class="s2-pill-dot"></div>TradiQuote — Built for SA tradies</div>
+      <div class="s2-headline">Quote done <span>before you<br>reverse out the driveway.</span></div>
+      <div class="s2-outcomes">
+        <div class="s2-out"><div class="s2-out-check">✓</div>No more quoting at 11pm</div>
+        <div class="s2-out"><div class="s2-out-check">✓</div>Client signs same day — on their phone</div>
+        <div class="s2-out"><div class="s2-out-check">✓</div>Deposit collected before your next job</div>
+      </div>
+    </div>
+    <div class="slide">
+      <div class="s3-headline">Quote faster.<br><span>Win the job.</span></div>
+      <div class="s3-proof">Built for SA tradies · <em>Start for R10, cancel anytime</em></div>
+      <div class="s3-row">
+        <div class="s3-badge">R10 trial</div>
+        <div class="s3-cta">Quote faster now →</div>
+      </div>
+      <div class="s3-url">tradiquote.co.za</div>
+    </div>
+  </div>
+  <div class="progress-track">
+    <div class="progress-bar"></div>
+  </div>
+</div>
+</body>
+</html>
