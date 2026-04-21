@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boom Winner Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; background: #111; font-family: 'DM Sans', sans-serif; position: relative; }
+
+  .card { position: fixed; top: calc(50% - 44px); left: 50%; transform-origin: center center; width: 1080px; height: 1080px; display: flex; flex-direction: column; overflow: hidden; }
+
+  .top-bar { height: 60px; background: #1c1c1c; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; flex-shrink: 0; }
+  .top-visit { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.75); }
+  .top-sponsor { display: flex; align-items: center; gap: 10px; }
+  .top-sponsor-label { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+  .top-pipe { width: 1px; height: 20px; background: rgba(255,255,255,0.18); }
+  .top-tq { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 900; color: #f97316; }
+
+  .main { flex: 1; background: linear-gradient(168deg, #2ecc71 0%, #25b35e 38%, #1a9148 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px 64px 28px; overflow: hidden; position: relative; }
+  .main::before { content: ''; position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 60% 40% at 15% 10%, rgba(255,255,255,0.09) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 85% 88%, rgba(0,0,0,0.09) 0%, transparent 60%); pointer-events: none; }
+  .main::after { content: ''; position: absolute; inset: 0; z-index: 0; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
+  .main > * { position: relative; z-index: 1; }
+
+  .winner-header { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+  .trophy { font-size: 34px; line-height: 1; }
+  .winner-label { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: 5px; text-transform: uppercase; color: white; }
+  .boom-word { font-family: 'Syne', sans-serif; font-size: 148px; font-weight: 900; color: white; line-height: 0.88; letter-spacing: -5px; text-shadow: 0 6px 0 rgba(0,0,0,0.12), 0 14px 32px rgba(0,0,0,0.15); }
+  .game-type { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: 9px; text-transform: uppercase; color: rgba(255,255,255,0.50); margin-top: 8px; }
+  .divider { width: 100%; height: 1px; position: relative; z-index: 2; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35) 15%, rgba(255,255,255,0.35) 85%, transparent); margin: 24px 0 26px; }
+
+  .teams-row { display: flex; align-items: center; gap: 24px; width: 100%; }
+  .team-card { flex: 1; background: rgba(255,255,255,0.13); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1.5px solid rgba(255,255,255,0.22); border-radius: 26px; padding: 28px 28px 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.22); }
+  .team-card.winner { background: rgba(255,255,255,0.20); border-color: rgba(255,255,255,0.55); box-shadow: 0 0 0 4px rgba(255,215,0,0.22), 0 12px 48px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.40); }
+  .team-name { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; color: white; }
+  .players { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  .player-row { display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 10px 16px; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.12); flex-shrink: 0; }
+  .player-name { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; color: white; }
+  .score { font-family: 'Syne', sans-serif; font-size: 88px; font-weight: 900; color: white; line-height: 1; text-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  .vs-wrap { flex-shrink: 0; }
+  .vs { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 900; color: rgba(255,255,255,0.80); background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20); border-radius: 50%; width: 66px; height: 66px; display: flex; align-items: center; justify-content: center; }
+
+  .bottom-strip { height: 108px; background: #0f1117; display: flex; align-items: center; justify-content: space-between; padding: 0 52px; flex-shrink: 0; position: relative; overflow: hidden; }
+  .bottom-strip::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #f97316 25%, #f97316 75%, transparent); }
+  .bottom-strip::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 320px; background: radial-gradient(ellipse at left center, rgba(249,115,22,0.09) 0%, transparent 70%); }
+  .tq-left { display: flex; flex-direction: column; gap: 3px; z-index: 1; }
+  .tq-eyebrow { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.40); }
+  .tq-wordmark { font-family: 'Syne', sans-serif; font-size: 34px; font-weight: 900; color: #f97316; letter-spacing: -0.5px; line-height: 1; }
+  .tq-pipe { width: 1px; height: 56px; background: rgba(255,255,255,0.08); z-index: 1; }
+  .tq-middle { display: flex; flex-direction: column; gap: 5px; z-index: 1; text-align: center; }
+  .tq-tagline { font-family: 'DM Sans', sans-serif; font-size: 14px; color: rgba(255,255,255,0.50); }
+  .tq-url { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: rgba(249,115,22,0.90); }
+  .tq-right { z-index: 1; }
+  .tq-cta { background: #f97316; color: white; font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; padding: 14px 30px; border-radius: 12px; white-space: nowrap; box-shadow: 0 4px 28px rgba(249,115,22,0.42); }
+
+  /* ── Download button — sits outside the card, never captured ── */
+  #download-btn {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f97316;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 16px 36px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 6px 32px rgba(249,115,22,0.50), 0 2px 8px rgba(0,0,0,0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+  #download-btn:hover {
+    background: #ea6c0a;
+    box-shadow: 0 8px 40px rgba(249,115,22,0.65), 0 2px 8px rgba(0,0,0,0.40);
+    transform: translateX(-50%) translateY(-2px);
+  }
+  #download-btn:active { transform: translateX(-50%) translateY(0); box-shadow: 0 4px 20px rgba(249,115,22,0.40); }
+  #download-btn:disabled { background: #444; box-shadow: none; cursor: not-allowed; transform: translateX(-50%); }
+</style>
+</head>
+<body>
+
+<!-- ── 1080×1080 share card ── -->
+<div class="card" id="share-card">
+
+  <div class="top-bar">
+    <div class="top-visit">HTTPS://BOOMSCORER.VERCEL.APP — TRACK YOUR GAMES</div>
+    <div class="top-sponsor">
+      <div class="top-sponsor-label">Sponsored by</div>
+      <div class="top-pipe"></div>
+      <div class="top-tq">TradiQuote</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="winner-header">
+      <div class="trophy">🏆</div>
+      <div class="winner-label">BOOM WINNER</div>
+      <div class="trophy">🏆</div>
+    </div>
+    <div class="boom-word">BOOM!</div>
+    <div class="game-type">KLAWERJAS</div>  <!-- swap: KLAWERJAS or DOMINOES -->
+    <div class="divider"></div>
+    <div class="teams-row">
+
+      <div class="team-card winner">  <!-- add class="winner" to the winning team only -->
+        <div class="team-name">TEAM 1</div>
+        <div class="players">
+          <div class="player-row"><div class="avatar"></div><div class="player-name">Player 1</div></div>
+          <div class="player-row"><div class="avatar"></div><div class="player-name">Player 2</div></div>
+        </div>
+        <div class="score">5</div>
+      </div>
+
+      <div class="vs-wrap"><div class="vs">VS</div></div>
+
+      <div class="team-card">
+        <div class="team-name">TEAM 2</div>
+        <div class="players">
+          <div class="player-row"><div class="avatar"></div><div class="player-name">Player 1</div></div>
+          <div class="player-row"><div class="avatar"></div><div class="player-name">Player 2</div></div>
+        </div>
+        <div class="score">1</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bottom-strip">
+    <div class="tq-left">
+      <div class="tq-eyebrow">Proudly sponsored by</div>
+      <div class="tq-wordmark">TradiQuote</div>
+    </div>
+    <div class="tq-pipe"></div>
+    <div class="tq-middle">
+      <div class="tq-tagline">Quote on site. Get signed. Collect deposit.</div>
+      <div class="tq-url">tradiquote.co.za</div>
+    </div>
+    <div class="tq-pipe"></div>
+    <div class="tq-right">
+      <div class="tq-cta">Start for R10 →</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Download & Share button — outside .card so it is never captured in the PNG -->
+<button id="download-btn">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 3v9m0 0l-3-3m3 3l3-3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3.5 14.5v1a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+  </svg>
+  Download &amp; Share
+</button>
+
+<!-- html2canvas for pixel-perfect 1080×1080 PNG capture -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  /* ── Responsive scaling — reserve 88px at bottom for the button ── */
+  var card = document.getElementById('share-card');
+  function fit() {
+    var scale = Math.min(window.innerWidth / 1080, (window.innerHeight - 88) / 1080);
+    card.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+  }
+  fit();
+  window.addEventListener('resize', fit);
+
+  /* ── Download handler ── */
+  var btn = document.getElementById('download-btn');
+  var ICON = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3v9m0 0l-3-3m3 3l3-3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 14.5v1a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>';
+
+  btn.addEventListener('click', function () {
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="white" stroke-width="2" stroke-dasharray="32" stroke-dashoffset="10"><animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="0.7s" repeatCount="indefinite"/></circle></svg> Generating…';
+
+    /* Hide button so it never appears in the captured PNG */
+    btn.style.display = 'none';
+
+    /* Pull card out of scaled/centred position so html2canvas sees the
+       raw 1080×1080 layout, not the viewport-shrunk version */
+    var savedTransform = card.style.transform;
+    card.style.transform = 'none';
+    card.style.position  = 'absolute';
+    card.style.top       = '0';
+    card.style.left      = '0';
+
+    html2canvas(card, {
+      width:           1080,
+      height:          1080,
+      scale:           1,
+      useCORS:         true,
+      allowTaint:      true,
+      backgroundColor: null,
+      logging:         false
+    }).then(function (canvas) {
+
+      /* Restore card */
+      card.style.transform = savedTransform;
+      card.style.position  = 'fixed';
+      card.style.top       = 'calc(50% - 44px)';
+      card.style.left      = '50%';
+
+      /* Filename from game type + winning team */
+      var gameType   = (document.querySelector('.game-type')  || {}).innerText || 'BOOM';
+      var winnerName = (document.querySelector('.team-card.winner .team-name') || {}).innerText || 'WINNER';
+      var slug = (gameType + '-' + winnerName)
+                   .toLowerCase()
+                   .replace(/\s+/g, '-')
+                   .replace(/[^a-z0-9\-]/g, '');
+
+      var link = document.createElement('a');
+      link.download = 'boom-winner-' + slug + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      btn.style.display = 'flex';
+      btn.disabled = false;
+      btn.innerHTML = ICON + ' Download &amp; Share';
+
+    }).catch(function (err) {
+      console.error('Capture failed:', err);
+      card.style.transform = savedTransform;
+      card.style.position  = 'fixed';
+      card.style.top       = 'calc(50% - 44px)';
+      card.style.left      = '50%';
+      btn.style.display = 'flex';
+      btn.disabled = false;
+      btn.innerHTML = '⚠ Try Again';
+      setTimeout(function () {
+        btn.innerHTML = ICON + ' Download &amp; Share';
+      }, 2500);
+    });
+  });
+</script>
+</body>
+</html>
