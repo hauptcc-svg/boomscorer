@@ -1,833 +1,279 @@
-# 🎯 BOOM SCORER - DEVELOPER HANDOVER DOCUMENT
+# 🎯 BOOM SCORER — DEVELOPER HANDOVER
 
-## 📋 Project Overview
-
-**Project Name**: Boom Scorer  
-**Version**: 2.0  
-**Purpose**: Online score tracker for South African card/domino games (Klawerjas & Dominoes)  
-**Target Users**: South African players who want to track game scores and share results on social media  
-**Domain**: https://boomscorer.fastbusiness.co.za  
-**Repository**: https://github.com/hauptcc-svg/boomscorer.git  
+**Last updated**: 2026-04-21  
+**Handed over by**: Cowork / Claude  
+**Handed over to**: Claude Code  
 
 ---
 
-## 🏗️ Architecture
+## 📋 Project Overview
 
-### Technology Stack
-- **Frontend**: Pure HTML5, CSS3, JavaScript (Vanilla JS - no frameworks)
-- **Libraries**: 
-  - html2canvas (v1.4.1) - For screenshot/download functionality
-  - Google Fonts (Roboto)
-- **Hosting**: Vercel (recommended) or cPanel
-- **File Size**: 162KB (single file, all-in-one)
-
-### Why No Framework?
-- **Single file deployment** - Easy to upload and maintain
-- **No build process** - Direct HTML deployment
-- **Fast loading** - 162KB total, loads in under 1 second
-- **Embedded assets** - MP3 sound file embedded as base64
-- **Zero dependencies** - Works offline after first load
+| Field | Value |
+|---|---|
+| **App name** | Boom Scorer |
+| **Purpose** | Score tracker for South African Klawerjas & Dominoes games |
+| **Primary URL** | https://boomscorer.vercel.app |
+| **Legacy URL** | https://boomscorer.fastbusiness.co.za (old domain, may still resolve) |
+| **Repository** | https://github.com/hauptcc-svg/boomscorer.git |
+| **Branch** | `main` (auto-deploys to Vercel on push) |
+| **Stack** | Vanilla HTML / CSS / JS — zero frameworks, single-file app |
+| **Sponsor** | TradiQuote (tradiquote.co.za) — ads + branding throughout |
 
 ---
 
 ## 📁 File Structure
 
 ```
-boomscorer/
-├── index.html              (162KB - Main application)
-├── favicon.svg             (Green "B" logo)
-├── README.md               (Project documentation)
-├── DEPLOYMENT.md           (Deployment instructions)
-├── LICENSE                 (MIT License)
-├── sitemap.xml             (SEO sitemap)
-├── robots.txt              (Search crawler config)
-└── vercel.json             (Vercel configuration)
+Boom Scorer/
+├── index.html              ← ENTIRE app lives here (game logic + share card)
+├── boom-winner-card.html   ← Standalone 1080x1080 card preview (reference/test only)
+├── sw.js                   ← Service worker (PWA caching) — currently v4
+├── vercel.json             ← Vercel headers config (Cache-Control, security)
+├── manifest.json           ← PWA manifest
+├── favicon.svg             ← Green "B" logo
+├── icon-192.png            ← PWA icon
+├── icon-512.png            ← PWA icon
+├── pewnaosoba7-pig-125132.mp3  ← Pig oink sound (VARK detection)
+├── ad.html                 ← TradiQuote ad creative (loaded in iframes)
+├── sitemap.xml             ← SEO
+├── robots.txt              ← SEO
+├── .htaccess               ← Apache config (legacy, Vercel ignores it)
+├── HANDOVER.md             ← This file
+├── README.md               ← Basic deployment instructions
+└── GITHUB_QUICKSTART.md    ← Git/Vercel setup guide
 ```
 
-**Note**: The entire app is in `index.html` - this is the ONLY file needed to run the application.
-
 ---
 
-## 🎮 Core Features
+## 🎮 How the App Works
 
-### 1. Game Setup
-- **Two game types**: Klawerjas (card game) and Dominoes
-- **Team configuration**: 2 teams of 2 players each
-- **Player names**: Autocomplete from localStorage (persistent)
-- **Photo uploads**: Camera or gallery for each player
-- **Responsive design**: Works on all devices (mobile-first)
+### Game Flow
+1. **Setup screen** — choose Klawerjas or Dominoes, enter 4 player names (2 per team), optional photos
+2. **Game screen** — score buttons per team, ticks display, edit button (pencil) per team
+3. **Results screen** — winner announcement, scores, Download & Share button, Play Again
 
-### 2. Game Scoring
-- **First to 5 wins**: Standard boom scoring
-- **Klawerjas rules**:
-  - Win (1 point): Standard win
-  - Win (2 points): Double win
-  - Af: Instant 5 points (automatic win)
-- **Dominoes rules**:
-  - Win: Standard win (1 point)
-  - MILO: Special win (2 points)
-  - TEL: Special win (2 points)
+### Scoring Rules
+**Klawerjas**: Win (+1), Double Win (+2), Af (+5, instant win)  
+**Dominoes**: Win (+1), MILO (+2), TEL (+2)  
+**First to 5 wins** — triggers BOOM and results screen
 
-### 3. VARK Detection (Automatic)
-- **5-0**: Single VARK (🐷) - loser gets pig
-- **6-0**: Double VARK (🐷🐷) - extra humiliation
-- **Pig sound**: Real MP3 "oink" plays automatically
-- **Visual animation**: Bouncing pig emoji appears on loser's panel
+### VARK Detection
+- **5-0**: Single VARK (pig emoji) — pig oink sound plays, pig animation on loser
+- **6-0**: Double VARK (two pig emojis) — same but extra humiliation
 
-### 4. Score Editing
-- **Edit button** (✏️) next to each team's score
-- **Modal dialog** for entering new score (0-10)
-- **Auto-adjust ticks** when score changes
-- **BOOM detection** after edit (checks for 5-0, 6-0, or 5+)
-- **Keyboard support**: Enter to save, Escape to cancel
-
-### 5. Results & Sharing
-- **Winner announcement**: Green card showing winning team
-- **Final scores**: Large display (5 VS 🐷)
-- **Download button**: Creates Instagram-ready image
-- **Share card specs**:
-  - Size: 800x800px square
-  - Format: JPEG (80% quality)
-  - File size: 300-500KB
-  - Includes: URL, winner badge, team names, photos, scores
-
-### 6. Ad Integration
-- **TradiQuote ads**: Two iframe zones (top and bottom)
-- **Ad URL**: https://tradiquote.co.za/ads/boomscorer.html
-- **Dimensions**: Full width, 220px height
-- **Styling**: Seamless integration with light grey background
-
----
-
-## 💾 Data Storage
-
-### LocalStorage Keys
+### Data Storage
 ```javascript
-'boomScorerPlayers' - Array of player names
-// Example: ["Craig", "Ewan", "Delicia", "Alistair"]
+localStorage['boomScorerPlayers'] = ["Craig", "Ewan", "Delicia", "Alistair"]
+// Player names persist for autocomplete. No other data is stored.
 ```
 
-### State Management
+### State Object
 ```javascript
 state = {
     gameType: 'klawerjas' | 'dominoes',
     team1: {
-        players: [
-            { name: 'Craig', photo: 'data:image/...' },
-            { name: 'Delicia', photo: 'data:image/...' }
-        ],
+        players: [{ name: 'Craig', photo: 'data:image/...' }, ...],
         score: 0,
-        ticks: [
-            { type: 'Win', timestamp: 1234567890 },
-            { type: 'Af', timestamp: 1234567891 }
-        ]
+        ticks: [{ type: 'Win', timestamp: 1234567890 }, ...]
     },
-    team2: { /* same structure */ },
-    history: [
-        {
-            gameNumber: 1,
-            winner: 'team1',
-            type: 'Win',
-            team1Score: 1,
-            team2Score: 0
-        }
-    ]
+    team2: { /* same */ },
+    history: [{ gameNumber, winner, type, team1Score, team2Score }]
 }
 ```
 
 ---
 
-## 🎨 Design System
+## 🖼️ Share Card (THE MAIN THING WORKED ON TODAY)
 
-### Color Palette
-```css
---primary: #00A86B       /* Green (main brand) */
---secondary: #FF6B35     /* Orange (team 2) */
---dark: #1A1A1A          /* Text dark */
---grey: #2A2A2A          /* Secondary text */
---light-grey: #E8E8E8    /* Borders */
---white: #FFFFFF         /* Background */
---danger: #DC143C        /* Red (VARK) */
---warning: #FFA500       /* Orange (special) */
+### What it is
+When a game ends, the player taps **Download & Share** to save a **1080x1080px PNG** to their phone for WhatsApp/Instagram sharing.
+
+### Architecture
+The share card is a **hidden `<div id="shareCard">`** inside `index.html`, positioned off-screen at `left: -9999px`. It is **always in the DOM** — html2canvas captures it directly without needing to show/hide it.
+
+### Card Layout (top to bottom, fixed at 1080x1080)
+```
++-----------------------------------------------------+  60px
+|  HTTPS://BOOMSCORER.VERCEL.APP - TRACK YOUR GAMES  |  dark #1c1c1c
+|                              Sponsored by | TradiQ  |
++-----------------------------------------------------+
+|                                                     |
+|            trophy  BOOM WINNER  trophy              |
+|                   BOOM!                             |  green gradient
+|                 KLAWERJAS                           |  flex:1
+|  -------------------------------------------------- |
+|  +--------------+    VS    +--------------+         |
+|  |   TEAM 1     |          |   TEAM 2     |         |
+|  |  [player 1]  |          |  [player 1]  |         |
+|  |  [player 2]  |          |  [player 2]  |         |
+|  |      5       |          |      1       |         |
+|  +--------------+          +--------------+         |
+|                                                     |
++-----------------------------------------------------+  108px
+|  TradiQuote  |  Quote on site. Get signed.  | Start |  dark #0f1117
+|              |  Collect deposit.            | for   |
+|              |  tradiquote.co.za            | R10 > |
++-----------------------------------------------------+
 ```
 
-### Typography
-```css
-Font Family: 'Roboto', sans-serif
-Weights: 400 (regular), 500 (medium), 700 (bold), 900 (black)
+### Dynamic values (injected by JS when game ends)
+| Element ID | What it shows |
+|---|---|
+| `scGame` | Game type text (KLAWERJAS or DOMINOES) |
+| `scScore1` | Team 1 final score (or pig emoji for VARK) |
+| `scScore2` | Team 2 final score |
+| `scPlayers1` | Team 1 player rows (avatar + name) |
+| `scPlayers2` | Team 2 player rows (avatar + name) |
+| `scTeam1` | Gets class `winner` added if team 1 won |
+| `scTeam2` | Gets class `winner` added if team 2 won |
 
-Sizes:
-- H1 (Header): 2.5em desktop, 2em mobile, 1.75em tiny
-- Buttons: 1.1em desktop, 0.95em mobile
-- Body text: 1em base
-- Small text: 0.85em
-```
+Winner class adds gold glow: `box-shadow: 0 0 0 4px rgba(255,215,0,0.22)`
 
-### Breakpoints
-```css
-Desktop: 600px+ (full features)
-Tablet/Mobile: ≤768px (optimized layout)
-Small Mobile: ≤480px (compact layout)
-```
+### Fonts used in card
+- **Syne** (700/800/900) — headings, wordmarks, scores
+- **DM Sans** (400/500/700) — body, labels
+- Both added to the existing Google Fonts import in `<head>` (alongside Roboto which the main app uses)
 
-### Components
-- **Card**: White background, 12px radius, subtle shadow
-- **Buttons**: 44-60px min-height (touch-friendly)
-- **Panels**: Team score displays (green/orange borders)
-- **Modal**: Score edit overlay (centered, 90% width max)
-
----
-
-## 🔧 Key Functions
-
-### Player Management
+### downloadCard() function (current version)
 ```javascript
-// Get stored player names
-function getStoredPlayers() {
-    const stored = localStorage.getItem('boomScorerPlayers');
-    return stored ? JSON.parse(stored) : [];
-}
-
-// Add player to autocomplete
-function addPlayerToStorage(name) {
-    if (!name || name.trim() === '') return;
-    let players = getStoredPlayers();
-    if (!players.includes(name)) {
-        players.push(name);
-        localStorage.setItem('boomScorerPlayers', JSON.stringify(players));
-    }
-}
-```
-
-### Photo Handling
-```javascript
-// Setup photo upload (camera or gallery)
-function setupPhoto(galId, camId, prevId) {
-    [galId, camId].forEach(id => {
-        document.getElementById(id).addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    document.getElementById(prevId).src = e.target.result;
-                    document.getElementById(prevId).classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-}
-```
-
-### Score Management
-```javascript
-// Add score with automatic BOOM/VARK detection
-function addScore(team, points, type) {
-    const otherTeam = team === 'team1' ? 'team2' : 'team1';
-    state[team].score += points;
-    
-    // Add ticks
-    for (let i = 0; i < points; i++) {
-        state[team].ticks.push({ 
-            type: type, 
-            timestamp: Date.now() + i 
-        });
-    }
-    
-    // Add to history
-    state.history.push({
-        gameNumber: state.history.length + 1,
-        winner: team,
-        type: type,
-        team1Score: state.team1.score,
-        team2Score: state.team2.score
-    });
-    
-    updateBoard();
-    
-    // Check for VARK (6-0 or 5-0)
-    if (state[team].score === 6 && state[otherTeam].score === 0) {
-        showVark(otherTeam, true);  // Double VARK
-        setTimeout(() => showResults(team), 3000);
-    } else if (state[team].score === 5 && state[otherTeam].score === 0) {
-        showVark(otherTeam);  // Single VARK
-        setTimeout(() => showResults(team), 3000);
-    } else if (state[team].score >= 5) {
-        setTimeout(() => showResults(team), 500);
-    }
-}
-```
-
-### Score Editing
-```javascript
-// Open score edit modal
-function openScoreEdit(team) {
-    currentEditingTeam = team;
-    const currentScore = state[team].score;
-    const teamName = team === 'team1' ? 'Team 1' : 'Team 2';
-    
-    document.getElementById('scoreEditTitle').textContent = `Edit ${teamName} Score`;
-    document.getElementById('scoreEditInput').value = currentScore;
-    document.getElementById('scoreEditModal').classList.add('show');
-    
-    setTimeout(() => {
-        document.getElementById('scoreEditInput').focus();
-        document.getElementById('scoreEditInput').select();
-    }, 100);
-}
-
-// Save edited score
-function saveScoreEdit() {
-    if (!currentEditingTeam) return;
-    
-    const newScore = parseInt(document.getElementById('scoreEditInput').value);
-    
-    // Validate
-    if (isNaN(newScore) || newScore < 0 || newScore > 10) {
-        alert('Please enter a valid score between 0 and 10');
-        return;
-    }
-    
-    // Update score
-    const oldScore = state[currentEditingTeam].score;
-    state[currentEditingTeam].score = newScore;
-    
-    // Adjust ticks
-    const tickDiff = newScore - oldScore;
-    if (tickDiff > 0) {
-        for (let i = 0; i < tickDiff; i++) {
-            state[currentEditingTeam].ticks.push({ 
-                type: 'Edit', 
-                timestamp: Date.now() + i 
-            });
-        }
-    } else if (tickDiff < 0) {
-        state[currentEditingTeam].ticks.splice(tickDiff);
-    }
-    
-    updateBoard();
-    closeScoreEdit();
-    
-    // Check if game should end
-    if (newScore >= 5) {
-        // ... BOOM detection logic
-    }
-}
-```
-
-### Download Function
-```javascript
-// Generate and download share card
 function downloadCard() {
     const card = document.getElementById('shareCard');
-    
-    // Temporarily show hidden card
-    card.style.display = 'flex';
-    
-    // Set dimensions for capture
-    const originalWidth = card.style.width;
-    const originalHeight = card.style.height;
-    card.style.width = '800px';
-    card.style.height = '800px';
-    
-    // Capture with html2canvas
-    html2canvas(card, { 
-        backgroundColor: '#00A86B',
-        scale: 1.5,              // 1200px actual render
-        width: 800,              // Output 800px
-        height: 800,
-        logging: false,
-        useCORS: true
+    // Card is off-screen at left:-9999px — no show/hide needed
+    html2canvas(card, {
+        width: 1080, height: 1080, scale: 1,
+        useCORS: true, allowTaint: true,
+        backgroundColor: null, logging: false
     }).then(canvas => {
-        // Restore and hide
-        card.style.width = originalWidth;
-        card.style.height = originalHeight;
-        card.style.display = 'none';
-        
-        // Download as JPEG (80% quality)
         const link = document.createElement('a');
-        link.download = `boom-${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/jpeg', 0.8);
+        link.download = 'boom-winner-klawerjas-team-2.png'; // dynamic slug
+        link.href = canvas.toDataURL('image/png');
         link.click();
     });
 }
 ```
 
-### Sound Effect
+### Winner JS additions (lines added to existing winner-detection block)
 ```javascript
-// Embedded pig oink sound (base64 MP3)
-const pigOinkSound = new Audio();
-pigOinkSound.src = 'data:audio/mp3;base64,<98KB_BASE64_DATA>';
+// Toggle winner gold glow on correct team card
+document.getElementById('scTeam1').classList.toggle('winner', winner === 'team1');
+document.getElementById('scTeam2').classList.toggle('winner', winner === 'team2');
 
-// Play pig sound
-function playPigOink() {
-    try {
-        pigOinkSound.currentTime = 0;
-        pigOinkSound.play().catch(err => {
-            console.log('Audio playback failed:', err);
-        });
-    } catch (e) {
-        console.log('Audio not supported');
-    }
-}
+// Player rows use sc-avatar class
+div.innerHTML = `
+    ${p.photo ? '<img class="sc-avatar" src="' + p.photo + '">' : '<div class="sc-avatar"></div>'}
+    <div class="name">${p.name}</div>
+`;
 ```
 
 ---
 
-## 🚀 Deployment
+## 🚨 Outstanding Issue — WHY OLD CARD STILL DOWNLOADS
 
-### Option 1: Vercel (Recommended)
+**Symptom**: After deploying today, clicking Download & Share still saves the OLD card (plain green, `VISIT: HTTPS://BOOMSCORER.FASTBUSINESS.CO.ZA` URL, no TradiQuote bottom strip).
 
-**Why Vercel?**
-- Free hosting
-- Automatic HTTPS
-- CDN (fast worldwide)
-- GitHub integration
-- Custom domain support
+**Root cause**: The **service worker** (`sw.js`) was on `boom-scorer-v3` and had `index.html` cached. Users' browsers serve the cached old version instead of the newly deployed one.
 
-**Steps:**
+**Fix applied in this session**: `sw.js` bumped from `boom-scorer-v3` to `boom-scorer-v4`.
+
+**THIS HAS NOT BEEN COMMITTED YET. Run this to deploy the fix:**
 ```bash
-# 1. Push to GitHub
-cd boomscorer
-git add .
-git commit -m "Deploy Boom Scorer v2.0"
+cd "C:\Users\haupt\Claude\Boom Scorer"
+git add index.html sw.js
+git commit -m "fix: new TradiQuote share card + bump SW cache to v4"
 git push origin main
-
-# 2. Deploy to Vercel
-# - Go to https://vercel.com
-# - Sign in with GitHub
-# - Click "Add New Project"
-# - Select hauptcc-svg/boomscorer
-# - Click "Deploy"
-# - Done! ✅
-
-# 3. Add custom domain
-# - In Vercel project → Settings → Domains
-# - Add: boomscorer.fastbusiness.co.za
-# - Configure DNS:
-#   Type: CNAME
-#   Name: boomscorer
-#   Value: cname.vercel-dns.com
 ```
 
-**vercel.json Configuration:**
-```json
-{
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
-        }
-      ]
-    }
-  ]
-}
+After deploy, users may need to **close and reopen the app** once for the new service worker to activate and bust the old cache.
+
+---
+
+## 🔧 Key CSS Classes (Share Card)
+
+All share card styles are prefixed `sc-` to avoid conflicts with the rest of the app CSS.
+
+```
+.share-card         -> 1080x1080 wrapper, position:fixed left:-9999px (off-screen)
+.sc-top-bar         -> Dark 60px header bar
+.sc-main            -> Green gradient flex:1 middle section
+.sc-bottom-strip    -> Dark 108px TradiQuote footer
+.sc-team            -> Team card (frosted glass look)
+.sc-team.winner     -> Gold glow border on winning team
+.sc-big-score       -> 88px Syne score number
+.sc-boom            -> 148px BOOM! headline
+.sc-avatar          -> 44px circle (player photo or empty placeholder)
+.sc-divider         -> White gradient horizontal rule (z-index:2 to appear above pseudo-elements)
 ```
 
-### Option 2: cPanel
+---
 
-**Steps:**
+## 📣 Ad Integration
+
+Two iframe ad zones in `index.html` that load `/ad.html`:
+- **Top**: Above game UI (TradiQuote rotating ad creative)
+- **Bottom**: Below results screen (TradiQuote CTA)
+
+`ad.html` is a standalone rotating ad file. The iframes are wrapped in a transparent click overlay that opens `https://tradiquote.co.za?utm_source=boomscorer...`
+
+---
+
+## 🛠️ Deployment
+
+**Every push to `main` triggers Vercel auto-deploy** (usually ~30 seconds).
+
 ```bash
-# 1. Access cPanel
-# - Log in to your hosting provider
-# - Navigate to File Manager
-
-# 2. Upload file
-# - Go to public_html/
-# - Upload index.html
-# - Ensure it's named exactly "index.html"
-
-# 3. Set permissions
-chmod 644 index.html
-
-# 4. Test
-# Visit: https://boomscorer.fastbusiness.co.za
-```
-
-### Option 3: GitHub Pages
-
-**Steps:**
-```bash
-# 1. Push to GitHub
+git add <files>
+git commit -m "your message"
 git push origin main
-
-# 2. Enable GitHub Pages
-# - Go to repo Settings → Pages
-# - Source: Deploy from main branch
-# - Save
-
-# 3. Access
-# Visit: https://hauptcc-svg.github.io/boomscorer
 ```
 
----
-
-## 🔍 SEO Configuration
-
-### sitemap.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://boomscorer.fastbusiness.co.za</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-</urlset>
-```
-
-### robots.txt
-```
-User-agent: *
-Allow: /
-
-Sitemap: https://boomscorer.fastbusiness.co.za/sitemap.xml
-```
-
-### Meta Tags (in index.html)
-```html
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boom Scorer - Track Your Games</title>
-<meta name="description" content="Free online scorer for Klawerjas and Dominoes. Track games, save scores, share results.">
-```
-
----
-
-## 🐛 Known Issues & Limitations
-
-### Current Limitations
-1. **No user accounts** - Everything stored in browser localStorage
-2. **No cloud sync** - Games don't sync across devices
-3. **No game history** - Past games not saved permanently
-4. **Single language** - English only (no Afrikaans)
-5. **No tournament mode** - One game at a time
-
-### Browser Compatibility
-- ✅ Chrome/Edge (desktop & mobile)
-- ✅ Safari (desktop & mobile)
-- ✅ Firefox (desktop & mobile)
-- ✅ Samsung Internet
-- ⚠️ IE11 not supported (uses modern JS)
-
-### Performance Considerations
-- **File size**: 162KB (loads fast on 3G)
-- **Download size**: 300-500KB JPEG (fast sharing)
-- **No external requests** (except Google Fonts and ads)
-- **Works offline** after first load (except ads)
-
----
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**1. Photos not uploading**
-```javascript
-// Check file input accepts images
-<input type="file" accept="image/*">
-
-// Verify FileReader is supported
-if (!window.FileReader) {
-    alert('FileReader not supported');
-}
-```
-
-**2. Download not working**
-```javascript
-// Ensure html2canvas is loaded
-if (typeof html2canvas === 'undefined') {
-    console.error('html2canvas not loaded');
-}
-
-// Check CORS for images
-// All images must be from same origin or use CORS
-```
-
-**3. Sound not playing**
-```javascript
-// Browser may block autoplay
-// User must interact with page first
-document.addEventListener('click', () => {
-    pigOinkSound.play(); // Now allowed
-}, { once: true });
-```
-
-**4. localStorage not persisting**
-```javascript
-// Check if localStorage is enabled
-try {
-    localStorage.setItem('test', 'test');
-    localStorage.removeItem('test');
-} catch (e) {
-    console.error('localStorage not available');
-}
-
-// Private browsing may disable localStorage
-```
-
-**5. Share card not generating**
-```javascript
-// Element must be visible during capture
-card.style.display = 'flex';  // Show
-html2canvas(card, {...});      // Capture
-card.style.display = 'none';   // Hide
-```
-
----
-
-## 📊 Analytics & Monitoring
-
-### Recommended Tools
-```javascript
-// Google Analytics 4
-gtag('config', 'GA_MEASUREMENT_ID', {
-    page_title: 'Boom Scorer',
-    page_location: window.location.href
-});
-
-// Track game completions
-gtag('event', 'game_complete', {
-    game_type: state.gameType,
-    winning_team: winner,
-    final_score: `${state.team1.score}-${state.team2.score}`
-});
-
-// Track downloads
-gtag('event', 'share_card_download', {
-    game_type: state.gameType
-});
-```
-
-### Error Tracking
-```javascript
-// Sentry or similar
-window.addEventListener('error', (event) => {
-    console.error('Global error:', event.error);
-    // Send to error tracking service
-});
-```
-
----
-
-## 🔄 Future Enhancements (Roadmap)
-
-### Phase 1: User Features
-- [ ] **Dark mode** - Toggle for dark/light theme
-- [ ] **Afrikaans language** - Full translation
-- [ ] **PWA support** - Install as app
-- [ ] **Game history** - Save past games
-- [ ] **Statistics** - Win rates, averages
-
-### Phase 2: Social Features
-- [ ] **Share to WhatsApp** - Native share API
-- [ ] **Share to Facebook** - Direct posting
-- [ ] **Leaderboards** - Top players
-- [ ] **Tournaments** - Multi-game tracking
-
-### Phase 3: Advanced Features
-- [ ] **User accounts** - Sign in with Google
-- [ ] **Cloud sync** - Cross-device games
-- [ ] **Live scoring** - Real-time updates
-- [ ] **Spectator mode** - Watch others play
-- [ ] **Custom rules** - User-defined scoring
-
-### Technical Debt
-- [ ] **Unit tests** - Jest or similar
-- [ ] **E2E tests** - Playwright or Cypress
-- [ ] **TypeScript** - Type safety
-- [ ] **Build process** - Webpack/Vite
-- [ ] **Component library** - React or Vue
-
----
-
-## 📞 Support & Maintenance
-
-### Contact Information
-- **Developer**: hauptcc-svg (GitHub)
-- **Website**: https://boomscorer.fastbusiness.co.za
-- **Repository**: https://github.com/hauptcc-svg/boomscorer
-- **Issues**: GitHub Issues
-
-### Maintenance Schedule
-- **Updates**: As needed
-- **Bug fixes**: Within 48 hours (critical)
-- **Feature requests**: Evaluated monthly
-- **Dependencies**: Review quarterly
-
-### Backup Strategy
+**Remote URL** uses a GitHub PAT stored in the git remote URL. If push fails with auth error:
 ```bash
-# Daily backup
-git push origin main
+git remote set-url origin https://hauptcc-svg:YOUR_TOKEN@github.com/hauptcc-svg/boomscorer.git
+```
 
-# Weekly backup
-# Export from Vercel/cPanel
+**Cache headers** (vercel.json):
+- `sw.js` — `no-cache` (always fresh, critical for SW updates)
+- `*.mp3`, `*.png`, `*.svg` — `immutable` 1 year
+- Everything else — `public, max-age=3600, must-revalidate`
 
-# Monthly backup
-# Full repository clone
-git clone --mirror https://github.com/hauptcc-svg/boomscorer.git
+---
+
+## 📐 Design Tokens (Share Card)
+
+```
+Orange:      #f97316
+Dark bg:     #0f1117
+Dark topbar: #1c1c1c
+Green grad:  linear-gradient(168deg, #2ecc71 0%, #25b35e 38%, #1a9148 100%)
 ```
 
 ---
 
-## 📝 Code Standards
+## ⚠️ Things NOT to Change
 
-### JavaScript
-```javascript
-// Use camelCase for variables/functions
-const playerName = 'Craig';
-function addScore(team, points) { }
-
-// Use PascalCase for constructors
-function GameState() { }
-
-// Use SCREAMING_SNAKE_CASE for constants
-const STORAGE_KEY = 'boomScorerPlayers';
-
-// Use descriptive names
-// Bad:  let x = 5;
-// Good: let teamScore = 5;
-
-// Add comments for complex logic
-// Calculate VARK condition
-if (state[team].score === 5 && state[otherTeam].score === 0) {
-    showVark(otherTeam);
-}
-```
-
-### CSS
-```css
-/* Use BEM-like naming */
-.card { }
-.card-title { }
-.card-content { }
-
-/* Use CSS variables for colors */
-:root {
-    --primary: #00A86B;
-}
-
-/* Mobile-first responsive */
-.button {
-    /* Mobile styles first */
-    padding: 10px;
-}
-
-@media (min-width: 768px) {
-    .button {
-        /* Desktop overrides */
-        padding: 15px;
-    }
-}
-```
-
-### HTML
-```html
-<!-- Use semantic HTML -->
-<header>
-<main>
-<section>
-<footer>
-
-<!-- Use meaningful IDs/classes -->
-<div id="gameScreen" class="screen">
-<button class="start-btn">Start Game</button>
-
-<!-- Include accessibility -->
-<button aria-label="Edit score">✏️</button>
-<img alt="Player photo">
-```
+- TradiQuote sponsor content (top bar text, bottom strip wordmark/tagline/CTA)
+- Top bar URL (`HTTPS://BOOMSCORER.VERCEL.APP — TRACK YOUR GAMES`)
+- Syne + DM Sans fonts in the share card
+- The `sc-` CSS prefix convention
+- Service worker network-first strategy (intentional for offline support)
+- html2canvas version (1.4.1 from cdnjs — tested and working)
 
 ---
 
-## 🧪 Testing Checklist
+## 🗂️ Reference File: boom-winner-card.html
 
-### Desktop Testing
-- [ ] Select Klawerjas game type
-- [ ] Select Dominoes game type
-- [ ] Enter 4 player names (autocomplete)
-- [ ] Upload 4 photos (gallery)
-- [ ] Start game
-- [ ] Score points (1pt, 2pt)
-- [ ] Edit scores with modal
-- [ ] Trigger VARK (5-0)
-- [ ] Trigger double VARK (6-0)
-- [ ] Hear pig sound
-- [ ] See winner announcement
-- [ ] Download share card
-- [ ] Check download file (800x800px, <1MB)
-- [ ] Verify URL on share card
-- [ ] Reset game
-- [ ] Play again
-
-### Mobile Testing
-- [ ] All desktop tests on mobile
-- [ ] Photo upload from camera
-- [ ] Touch targets large enough
-- [ ] Text readable (not too small)
-- [ ] No horizontal scrolling
-- [ ] Buttons don't overlap
-- [ ] Modal fits screen
-- [ ] Share card renders correctly
-- [ ] Download works on mobile
-- [ ] WhatsApp share works
-
-### Cross-Browser Testing
-- [ ] Chrome (desktop & mobile)
-- [ ] Safari (desktop & mobile)
-- [ ] Firefox (desktop & mobile)
-- [ ] Edge (desktop)
-- [ ] Samsung Internet (mobile)
+A **standalone version** of the share card with its own Download & Share button. Lives at `https://boomscorer.vercel.app/boom-winner-card.html`. Used for visual design testing only — the app uses the embedded `#shareCard` div inside `index.html` for actual downloads.
 
 ---
 
-## 📚 Resources
+## ✅ Next Steps for Claude Code
 
-### Documentation
-- **HTML2Canvas**: https://html2canvas.hertzen.com/
-- **FileReader API**: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-- **localStorage**: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
-- **Web Audio API**: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
-
-### Design Tools
-- **Colors**: https://coolors.co
-- **Icons**: https://emojipedia.org
-- **Fonts**: https://fonts.google.com
-
-### Testing Tools
-- **Responsive**: Chrome DevTools
-- **Performance**: Lighthouse
-- **Accessibility**: WAVE
-
----
-
-## 🎉 Summary
-
-**Boom Scorer** is a production-ready, single-file web application for tracking Klawerjas and Dominoes games. It features:
-
-- ✅ **Simple deployment** - Single HTML file
-- ✅ **Fast loading** - 162KB total
-- ✅ **Mobile-first** - Fully responsive
-- ✅ **Instagram-ready** - 800x800px downloads
-- ✅ **Feature-complete** - Score tracking, editing, sharing
-- ✅ **Production-tested** - Ready for real users
-
-**Deploy to Vercel and enjoy!** 🚀
-
----
-
-## 📄 License
-
-MIT License - See LICENSE file for details
-
----
-
-**Last Updated**: 2026-04-21  
-**Version**: 2.0  
-**Status**: Production Ready ✅
-
-© 2026 Boom Scorer | Made in South Africa 🇿🇦
+1. **Commit and push `sw.js` + `index.html`** — fixes the service worker cache so users get the new card design:
+   ```bash
+   git add index.html sw.js
+   git commit -m "fix: new TradiQuote share card + bump SW cache to v4"
+   git push origin main
+   ```
+2. **Test** — open boomscorer.vercel.app in a fresh/incognito browser, play a game, tap Download & Share, confirm PNG has: dark top bar + green middle section + TradiQuote bottom strip
+3. **Verify player names appear** on the downloaded card (check `scPlayers1`/`scPlayers2` rendering via html2canvas)
+4. **Optional cleanup** — update the old `fastbusiness.co.za` references in README.md and meta tags to `vercel.app`
