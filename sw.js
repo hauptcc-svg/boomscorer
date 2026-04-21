@@ -1,7 +1,7 @@
 // Boom Scorer Service Worker
 // Caches core assets for offline play
 
-const CACHE_NAME = 'boom-scorer-v4';
+const CACHE_NAME = 'boom-scorer-v5';
 const ASSETS = [
     '/',
     '/index.html',

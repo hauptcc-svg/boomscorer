@@ -18,20 +18,20 @@
 
     <!-- Open Graph (WhatsApp, Facebook, iMessage previews) -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://boomscorer.fastbusiness.co.za">
+    <meta property="og:url" content="https://boomscorer.vercel.app">
     <meta property="og:title" content="Boom Scorer – Klawerjas & Dominoes Tracker">
     <meta property="og:description" content="Free online scorer for Klawerjas and Dominoes. Track games, share results on WhatsApp &amp; Instagram. Made in South Africa 🇿🇦">
-    <meta property="og:image" content="https://boomscorer.fastbusiness.co.za/og-image.png">
+    <meta property="og:image" content="https://boomscorer.vercel.app/icon-512.png">
     <meta property="og:locale" content="en_ZA">
 
     <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Boom Scorer – Klawerjas & Dominoes Tracker">
     <meta name="twitter:description" content="Free online scorer for Klawerjas and Dominoes. Made in South Africa 🇿🇦">
-    <meta name="twitter:image" content="https://boomscorer.fastbusiness.co.za/og-image.png">
+    <meta name="twitter:image" content="https://boomscorer.vercel.app/icon-512.png">
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://boomscorer.fastbusiness.co.za">
+    <link rel="canonical" href="https://boomscorer.vercel.app">
 
     <!-- Google Fonts (preconnect for speed) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2194,8 +2194,14 @@
                 useCORS:         true,
                 allowTaint:      true,
                 backgroundColor: null,
-                logging:         false
-            }).then(canvas => {
+                logging:         false,
+                onclone: function(clonedDoc) {
+                    const el = clonedDoc.getElementById('shareCard');
+                    el.style.position = 'absolute';
+                    el.style.left = '0';
+                    el.style.top  = '0';
+                }
+            }).then(function(canvas) {
                 const gameType   = (document.getElementById('scGame')  || {}).textContent || 'BOOM';
                 const winnerEl   = card.querySelector('.sc-team.winner .sc-team-label');
                 const winnerName = winnerEl ? winnerEl.textContent : 'WINNER';
@@ -2208,6 +2214,9 @@
                 link.download = 'boom-winner-' + slug + '.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+            }).catch(function(err) {
+                console.error('html2canvas error:', err);
+                alert('Download failed. Please try again or take a screenshot.');
             });
         }
 
@@ -2247,6 +2256,11 @@
                 navigator.serviceWorker.register('/sw.js')
                     .then(reg => console.log('SW registered:', reg.scope))
                     .catch(err => console.log('SW registration failed:', err));
+            });
+
+            // Auto-reload when a new service worker takes control
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
             });
         }
 
