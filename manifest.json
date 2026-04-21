@@ -1,0 +1,57 @@
+{
+  "name": "Boom Scorer",
+  "short_name": "BoomScorer",
+  "description": "Free online scorer for Klawerjas and Dominoes. Made in South Africa.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#00A86B",
+  "theme_color": "#00A86B",
+  "orientation": "portrait-primary",
+  "lang": "en-ZA",
+  "scope": "/",
+  "categories": ["games", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "Boom Scorer game screen"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Klawerjas Game",
+      "short_name": "Klawerjas",
+      "description": "Start a new Klawerjas game",
+      "url": "/?game=klawerjas",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "New Dominoes Game",
+      "short_name": "Dominoes",
+      "description": "Start a new Dominoes game",
+      "url": "/?game=dominoes",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boom Scorer - Track Your Games</title>
+    <meta name="description" content="Free online scorer for Klawerjas and Dominoes. Track games, save scores, share results.">
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#00A86B">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Boom Scorer">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- Open Graph (WhatsApp, Facebook, iMessage previews) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://boomscorer.fastbusiness.co.za">
+    <meta property="og:title" content="Boom Scorer – Klawerjas & Dominoes Tracker">
+    <meta property="og:description" content="Free online scorer for Klawerjas and Dominoes. Track games, share results on WhatsApp &amp; Instagram. Made in South Africa 🇿🇦">
+    <meta property="og:image" content="https://boomscorer.fastbusiness.co.za/og-image.png">
+    <meta property="og:locale" content="en_ZA">
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Boom Scorer – Klawerjas & Dominoes Tracker">
+    <meta name="twitter:description" content="Free online scorer for Klawerjas and Dominoes. Made in South Africa 🇿🇦">
+    <meta name="twitter:image" content="https://boomscorer.fastbusiness.co.za/og-image.png">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://boomscorer.fastbusiness.co.za">
+
+    <!-- Google Fonts (preconnect for speed) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #00A86B;
+            --secondary: #FF6B35;
+            --dark: #1A1A1A;
+            --grey: #2A2A2A;
+            --light-grey: #E8E8E8;
+            --white: #FFFFFF;
+            --danger: #DC143C;
+            --warning: #FFA500;
+            --gradient-start: #00A86B;
+            --gradient-end: #008F5D;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #F5F5F5;
+            color: var(--dark);
+            line-height: 1.6;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            font-size: 0.9em;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* Ad Zone */
+        .ad-zone {
+            background: #F9F9F9;
+            border: 1px solid #E0E0E0;
+            padding: 0;
+            text-align: center;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .ad-zone iframe {
+            width: 100%;
+            height: 220px;
+            border: none;
+            display: block;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #E8E8E8;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-grey);
+        }
+
+        /* Game Type Selection */
+        .game-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .game-tab {
+            padding: 18px 12px;
+            border: 2px solid var(--light-grey);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--grey);
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-tab:hover {
+            border-color: var(--primary);
+            background: #F0FFF8;
+        }
+
+        .game-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+        }
+
+        .game-tab .icon {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Team Setup */
+        .team-box {
+            margin-bottom: 25px;
+        }
+
+        .team-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .team-header.t1 {
+            background: linear-gradient(135deg, rgba(0, 168, 107, 0.1), rgba(0, 168, 107, 0.05));
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .team-header.t2 {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .player-row {
+            background: #FAFAFA;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #E8E8E8;
+        }
+
+        .player-row label {
+            display: block;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-with-dropdown {
+            position: relative;
+        }
+
+        .player-row input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .player-row input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.1);
+        }
+
+        .dropdown-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            margin-top: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
+
+        .dropdown-suggestions.show {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #F0F0F0;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background: #F0FFF8;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .photo-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .photo-controls input[type="file"] {
+            display: none;
+        }
+
+        .photo-btn {
+            background: var(--primary);
+            color: white !important;
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-align: center;
+            min-height: 48px;
+        }
+
+        .photo-btn:hover {
+            background: #008F5D;
+            transform: translateY(-1px);
+        }
+
+        .photo-btn:active {
+            transform: translateY(0);
+        }
+
+        .photo-preview-container {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .photo-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Start Button */
+        .start-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 168, 107, 0.3);
+            min-height: 60px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 107, 0.4);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Game Screen */
+        .game-screen {
+            display: none;
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .boom-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: #F9F9F9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .boom-pip {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #DDD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.3em;
+            background: white;
+            transition: all 0.4s;
+        }
+
+        .boom-pip.t1 {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 168, 107, 0.1), white);
+        }
+
+        .boom-pip.t2 {
+            border-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), white);
+        }
+
+        .boom-pip.filled {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.4);
+        }
+
+        .boom-pip.t2.filled {
+            background: var(--secondary);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Score Panels */
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px 15px;
+            border: 3px solid;
+            position: relative;
+            min-height: 320px;
+        }
+
+        .panel.t1 {
+            border-color: var(--primary);
+            background: linear-gradient(180deg, rgba(0, 168, 107, 0.02) 0%, white 100%);
+        }
+
+        .panel.t2 {
+            border-color: var(--secondary);
+            background: linear-gradient(180deg, rgba(255, 107, 53, 0.02) 0%, white 100%);
+        }
+
+        .panel-name {
+            font-size: 1.1em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .panel.t1 .panel-name {
+            color: var(--primary);
+        }
+
+        .panel.t2 .panel-name {
+            color: var(--secondary);
+        }
+
+        .panel-players {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .mini-player {
+            text-align: center;
+        }
+
+        .mini-player img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            object-fit: cover;
+            margin-bottom: 5px;
+        }
+
+        .panel.t2 .mini-player img {
+            border-color: var(--secondary);
+        }
+
+        .mini-player .pname {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .panel-score {
+            text-align: center;
+            font-size: 4.5em;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 15px 0;
+            line-height: 1;
+            position: relative;
+        }
+
+        .panel.t2 .panel-score {
+            color: var(--secondary);
+        }
+        
+        .score-edit-btn {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 0.3em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .score-edit-btn:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .score-edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .score-edit-modal.show {
+            display: flex;
+        }
+        
+        .score-edit-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .score-edit-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .score-edit-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 2em;
+            font-weight: 900;
+            text-align: center;
+            border: 3px solid var(--primary);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .score-edit-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .score-edit-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1em;
+            border: none;
+        }
+        
+        .score-edit-save {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .score-edit-cancel {
+            background: #E0E0E0;
+            color: var(--dark);
+        }
+
+        .panel-ticks {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-height: 35px;
+        }
+
+        .tick {
+            font-size: 1.8em;
+            color: var(--primary);
+            animation: tickIn 0.4s ease;
+        }
+
+        .panel.t2 .tick {
+            color: var(--secondary);
+        }
+
+        @keyframes tickIn {
+            0% { transform: scale(0) rotate(-90deg); opacity: 0; }
+            60% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        .tick-label {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.5em;
+            font-weight: 700;
+            margin-left: 3px;
+            vertical-align: middle;
+        }
+
+        /* Vark Animation */
+        .vark-anim {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            z-index: 10;
+            animation: varkBounce 0.7s ease infinite;
+        }
+
+        @keyframes varkBounce {
+            0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-5deg); }
+            50% { transform: translate(-50%, -50%) scale(1.15) rotate(5deg); }
+        }
+
+        .vark-text {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            font-weight: 900;
+            color: var(--danger);
+            letter-spacing: 2px;
+            animation: varkPulse 1s ease infinite;
+        }
+
+        @keyframes varkPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Controls */
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ctrl-btn {
+            padding: 16px 12px;
+            border: 2px solid;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-height: 56px;
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.97);
+        }
+
+        .ctrl-btn.win {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .ctrl-btn.win:hover {
+            background: #008F5D;
+        }
+
+        .ctrl-btn.special {
+            background: var(--warning);
+            color: white;
+            border-color: var(--warning);
+        }
+
+        .ctrl-btn.special:hover {
+            background: #FF8C00;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            background: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 50px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary);
+            background: #F0FFF8;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            display: none;
+        }
+
+        .winner-card {
+            background: linear-gradient(135deg, var(--primary), #008F5D);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 168, 107, 0.3);
+        }
+
+        .winner-badge {
+            font-size: 1em;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        .winner-name {
+            font-size: 2.5em;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .final-vs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 25px 0;
+            font-size: 2.5em;
+            font-weight: 900;
+            flex-wrap: wrap;
+        }
+
+        .final-vs .vs {
+            font-size: 0.6em;
+            color: #999;
+            min-width: 60px;
+        }
+        
+        .final-vs > div:not(.vs) {
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Share Card - Instagram Square Format */
+        .share-card {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            border-radius: 20px;
+            padding: 35px 30px;
+            margin: 20px 0;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            border: none;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .share-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .sc-top {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .sc-url-top {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sc-winner-badge {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .sc-boom {
+            font-size: 3.5em;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 10px;
+            margin-bottom: 8px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sc-game {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .sc-middle {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 25px 0;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .sc-team {
+            text-align: center;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px 15px;
+            border-radius: 18px;
+            backdrop-filter: blur(10px);
+        }
+
+        .sc-team-label {
+            font-size: 1.6em;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: white;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+            letter-spacing: 3px;
+        }
+
+        .sc-players {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .sc-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 14px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .sc-player img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .sc-player .name {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .sc-big-score {
+            font-size: 6em;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            margin: 10px 0;
+        }
+
+        .sc-vs {
+            font-size: 2.5em;
+            color: white;
+            font-weight: 900;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+            margin: 0 20px;
+        }
+
+        /* Website URL at bottom */
+        .share-btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-height: 60px;
+        }
+
+        .share-btn.download {
+            background: linear-gradient(135deg, var(--primary), #008F5D);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 168, 107, 0.3);
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 107, 0.4);
+        }
+
+        .replay-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), #008F5D);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            min-height: 60px;
+        }
+
+        .replay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 107, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 2em;
+                letter-spacing: 1px;
+            }
+
+            .tagline {
+                font-size: 0.85em;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .card-title {
+                font-size: 1.15em;
+            }
+
+            .game-tabs {
+                gap: 10px;
+            }
+
+            .game-tab {
+                padding: 15px 10px;
+                font-size: 1em;
+                min-height: 90px;
+            }
+
+            .game-tab .icon {
+                font-size: 2em;
+            }
+
+            .team-header {
+                font-size: 1.05em;
+                padding: 10px;
+            }
+
+            .player-row {
+                padding: 12px;
+            }
+
+            .player-row label {
+                font-size: 0.8em;
+            }
+
+            .player-row input[type="text"] {
+                padding: 12px;
+                font-size: 0.95em;
+            }
+
+            .photo-controls {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .photo-btn {
+                padding: 10px 12px;
+                font-size: 0.85em;
+                min-height: 44px;
+            }
+
+            .photo-preview {
+                width: 60px;
+                height: 60px;
+            }
+
+            .start-btn {
+                padding: 16px;
+                font-size: 1.15em;
+                min-height: 56px;
+            }
+
+            .game-header {
+                font-size: 1.3em;
+                padding: 12px 15px;
+            }
+
+            .boom-tracker {
+                gap: 8px;
+                padding: 15px;
+            }
+
+            .boom-pip {
+                width: 45px;
+                height: 45px;
+                font-size: 1.15em;
+            }
+
+            .panels {
+                gap: 10px;
+            }
+
+            .panel {
+                padding: 15px 10px;
+                min-height: 280px;
+            }
+
+            .panel-name {
+                font-size: 1em;
+            }
+
+            .mini-player img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .mini-player .pname {
+                font-size: 0.7em;
+            }
+
+            .panel-score {
+                font-size: 3.8em;
+            }
+
+            .ctrl-btn {
+                padding: 12px 8px;
+                font-size: 0.85em;
+                min-height: 50px;
+            }
+
+            .action-btn {
+                padding: 12px;
+                font-size: 0.9em;
+                min-height: 46px;
+            }
+
+            .winner-name {
+                font-size: 2em;
+            }
+
+            .final-vs {
+                font-size: 2em;
+                gap: 20px;
+            }
+
+            .share-card {
+                padding: 35px 25px;
+            }
+            
+            .sc-winner-badge {
+                font-size: 1em;
+            }
+
+            .sc-boom {
+                font-size: 2.8em;
+                letter-spacing: 8px;
+            }
+
+            .sc-game {
+                font-size: 1.1em;
+                letter-spacing: 3px;
+            }
+
+            .sc-team {
+                padding: 20px 12px;
+            }
+
+            .sc-team-label {
+                font-size: 1.4em;
+            }
+
+            .sc-player img {
+                width: 65px;
+                height: 65px;
+            }
+
+            .sc-player .name {
+                font-size: 1.05em;
+            }
+
+            .sc-big-score {
+                font-size: 5em;
+            }
+
+            .sc-vs {
+                font-size: 2.2em;
+                margin: 0 15px;
+            }
+
+            .sc-url-top {
+                font-size: 0.75em;
+            }
+
+            .share-btn {
+                padding: 14px;
+                font-size: 1em;
+                min-height: 54px;
+            }
+
+            .replay-btn {
+                padding: 16px;
+                font-size: 1.15em;
+                min-height: 56px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.75em;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .game-tab {
+                padding: 12px 8px;
+                font-size: 0.95em;
+                min-height: 85px;
+            }
+
+            .game-tab .icon {
+                font-size: 1.8em;
+            }
+
+            .boom-pip {
+                width: 40px;
+                height: 40px;
+                font-size: 1em;
+            }
+
+            .panel-score {
+                font-size: 3.2em;
+            }
+
+            .ctrl-btn {
+                padding: 10px 6px;
+                font-size: 0.8em;
+                min-height: 48px;
+            }
+
+            .sc-winner-badge {
+                font-size: 0.85em;
+            }
+            
+            .sc-boom {
+                font-size: 2.2em;
+                letter-spacing: 5px;
+            }
+
+            .sc-big-score {
+                font-size: 4.2em;
+            }
+            
+            .sc-vs {
+                font-size: 1.8em;
+            }
+
+            .sc-url-top {
+                font-size: 0.65em;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: #F5F5F5;
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 0.85em;
+            border-top: 1px solid #E8E8E8;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BOOM SCORER</h1>
+            <div class="tagline">Track Your Klawerjas & Dominoes Games</div>
+        </header>
+
+        <!-- Ad Zone Top -->
+        <div class="ad-zone">
+            <iframe src="https://tradiquote.co.za/ads/boomscorer.html"
+                width="100%" height="220" frameborder="0" scrolling="no"
+                sandbox="allow-scripts allow-same-origin"
+                loading="lazy"
+                style="border:none;display:block;"></iframe>
+        </div>
+
+        <!-- Setup Screen -->
+        <div class="setup-screen" id="setupScreen">
+            <div class="content">
+                <div class="card">
+                    <div class="card-title">Select Game Type</div>
+                    <div class="game-tabs">
+                        <div class="game-tab active" data-game="klawerjas">
+                            <span class="icon">🃏</span>
+                            Klawerjas
+                        </div>
+                        <div class="game-tab" data-game="dominoes">
+                            <span class="icon">🎲</span>
+                            Dominoes
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="team-box">
+                        <div class="team-header t1">
+                            <span>🟢</span> TEAM 1
+                        </div>
+                        <div class="player-row">
+                            <label>Player 1</label>
+                            <div class="input-with-dropdown">
+                                <input type="text" id="t1p1name" placeholder="Enter name" autocomplete="off">
+                                <div class="dropdown-suggestions" id="t1p1dropdown"></div>
+                            </div>
+                            <div class="photo-controls">
+                                <label class="photo-btn" for="t1p1gal">📁 Gallery</label>
+                                <input type="file" id="t1p1gal" accept="image/*">
+                                <label class="photo-btn" for="t1p1cam">📷 Camera</label>
+                                <input type="file" id="t1p1cam" accept="image/*" capture="user">
+                            </div>
+                            <div class="photo-preview-container">
+                                <img id="t1p1prev" class="photo-preview hidden" src="">
+                            </div>
+                        </div>
+                        <div class="player-row">
+                            <label>Player 2</label>
+                            <div class="input-with-dropdown">
+                                <input type="text" id="t1p2name" placeholder="Enter name" autocomplete="off">
+                                <div class="dropdown-suggestions" id="t1p2dropdown"></div>
+                            </div>
+                            <div class="photo-controls">
+                                <label class="photo-btn" for="t1p2gal">📁 Gallery</label>
+                                <input type="file" id="t1p2gal" accept="image/*">
+                                <label class="photo-btn" for="t1p2cam">📷 Camera</label>
+                                <input type="file" id="t1p2cam" accept="image/*" capture="user">
+                            </div>
+                            <div class="photo-preview-container">
+                                <img id="t1p2prev" class="photo-preview hidden" src="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="team-box">
+                        <div class="team-header t2">
+                            <span>🟠</span> TEAM 2
+                        </div>
+                        <div class="player-row">
+                            <label>Player 1</label>
+                            <div class="input-with-dropdown">
+                                <input type="text" id="t2p1name" placeholder="Enter name" autocomplete="off">
+                                <div class="dropdown-suggestions" id="t2p1dropdown"></div>
+                            </div>
+                            <div class="photo-controls">
+                                <label class="photo-btn" for="t2p1gal">📁 Gallery</label>
+                                <input type="file" id="t2p1gal" accept="image/*">
+                                <label class="photo-btn" for="t2p1cam">📷 Camera</label>
+                                <input type="file" id="t2p1cam" accept="image/*" capture="user">
+                            </div>
+                            <div class="photo-preview-container">
+                                <img id="t2p1prev" class="photo-preview hidden" src="">
+                            </div>
+                        </div>
+                        <div class="player-row">
+                            <label>Player 2</label>
+                            <div class="input-with-dropdown">
+                                <input type="text" id="t2p2name" placeholder="Enter name" autocomplete="off">
+                                <div class="dropdown-suggestions" id="t2p2dropdown"></div>
+                            </div>
+                            <div class="photo-controls">
+                                <label class="photo-btn" for="t2p2gal">📁 Gallery</label>
+                                <input type="file" id="t2p2gal" accept="image/*">
+                                <label class="photo-btn" for="t2p2cam">📷 Camera</label>
+                                <input type="file" id="t2p2cam" accept="image/*" capture="user">
+                            </div>
+                            <div class="photo-preview-container">
+                                <img id="t2p2prev" class="photo-preview hidden" src="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="start-btn" id="startBtn">Start Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <div class="content">
+                <div class="card">
+                    <div class="game-header" id="gameHeader">KLAWERJAS</div>
+                    
+                    <div class="boom-tracker" id="boomTracker">
+                        <div class="boom-pip">1</div>
+                        <div class="boom-pip">2</div>
+                        <div class="boom-pip">3</div>
+                        <div class="boom-pip">4</div>
+                        <div class="boom-pip">5</div>
+                    </div>
+
+                    <div class="panels">
+                        <div class="panel t1" id="panel1">
+                            <div class="panel-name">TEAM 1</div>
+                            <div class="panel-players" id="players1"></div>
+                            <div class="panel-score" id="score1">
+                                0
+                                <button class="score-edit-btn" onclick="openScoreEdit('team1')" title="Edit score">✏️</button>
+                            </div>
+                            <div class="panel-ticks" id="ticks1"></div>
+                        </div>
+
+                        <div class="panel t2" id="panel2">
+                            <div class="panel-name">TEAM 2</div>
+                            <div class="panel-players" id="players2"></div>
+                            <div class="panel-score" id="score2">
+                                0
+                                <button class="score-edit-btn" onclick="openScoreEdit('team2')" title="Edit score">✏️</button>
+                            </div>
+                            <div class="panel-ticks" id="ticks2"></div>
+                        </div>
+                    </div>
+
+                    <div class="controls" id="controls"></div>
+
+                    <div class="actions">
+                        <button class="action-btn" onclick="resetGame()">Reset</button>
+                        <button class="action-btn" onclick="endGame()">End Game</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Edit Modal -->
+        <div class="score-edit-modal" id="scoreEditModal">
+            <div class="score-edit-content">
+                <div class="score-edit-title" id="scoreEditTitle">Edit Team Score</div>
+                <input type="number" class="score-edit-input" id="scoreEditInput" min="0" max="10" value="0">
+                <div class="score-edit-buttons">
+                    <button class="score-edit-cancel" onclick="closeScoreEdit()">Cancel</button>
+                    <button class="score-edit-save" onclick="saveScoreEdit()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-screen" id="resultsScreen">
+            <div class="content">
+                <div class="winner-card">
+                    <div class="winner-badge">🏆 BOOM WINNER 🏆</div>
+                    <div class="winner-name" id="winnerName"></div>
+                </div>
+
+                <div class="final-vs">
+                    <div id="finalScore1">0</div>
+                    <div class="vs">VS</div>
+                    <div id="finalScore2">0</div>
+                </div>
+
+                <!-- Share card hidden, only rendered for download -->
+                <div class="share-card" id="shareCard" style="display: none;">
+                    <div class="sc-top">
+                        <div class="sc-url-top">VISIT: HTTPS://BOOMSCORER.FASTBUSINESS.CO.ZA</div>
+                        <div class="sc-winner-badge">🏆 BOOM WINNER 🏆</div>
+                        <div class="sc-boom">BOOM!</div>
+                        <div class="sc-game" id="scGame"></div>
+                    </div>
+                    
+                    <div class="sc-middle">
+                        <div class="sc-team">
+                            <div class="sc-team-label">TEAM 1</div>
+                            <div class="sc-players" id="scPlayers1"></div>
+                            <div class="sc-big-score" id="scScore1">0</div>
+                        </div>
+                        <div class="sc-vs">VS</div>
+                        <div class="sc-team">
+                            <div class="sc-team-label">TEAM 2</div>
+                            <div class="sc-players" id="scPlayers2"></div>
+                            <div class="sc-big-score" id="scScore2">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="share-btns">
+                    <button class="share-btn download" onclick="downloadCard()">📥 Download & Share</button>
+                </div>
+
+                <button class="replay-btn" onclick="newGame()">Play Again</button>
+            </div>
+        </div>
+
+        <!-- Ad Zone Bottom -->
+        <div class="ad-zone">
+            <iframe src="https://tradiquote.co.za/ads/boomscorer.html"
+                width="100%" height="220" frameborder="0" scrolling="no"
+                sandbox="allow-scripts allow-same-origin"
+                loading="lazy"
+                style="border:none;display:block;"></iframe>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Boom Scorer | <a href="https://boomscorer.fastbusiness.co.za">boomscorer.fastbusiness.co.za</a></p>
+            <p style="margin-top: 5px; font-size: 0.9em;">Made in South Africa 🇿🇦 | Track Klawerjas & Dominoes</p>
+        </footer>
+    </div>
+
+    <!-- HTML2Canvas for image export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+        // Pig oink sound - Base64 embedded MP3
+        const pigOinkSound = new Audio();
+        pigOinkSound.src = '/pewnaosoba7-pig-125132.mp3';
+
+        // LocalStorage for player names
+        const STORAGE_KEY = 'boomScorerPlayers';
+
+        function getStoredPlayers() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function addPlayerToStorage(name) {
+            if (!name || name.trim() === '') return;
+            let players = getStoredPlayers();
+            if (!players.includes(name)) {
+                players.push(name);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+            }
+        }
+
+        // Dropdown autocomplete
+        function setupAutocomplete(inputId, dropdownId) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+
+            input.addEventListener('input', function() {
+                const value = this.value.toLowerCase();
+                dropdown.innerHTML = '';
+                
+                if (value.length > 0) {
+                    const players = getStoredPlayers();
+                    const matches = players.filter(p => p.toLowerCase().includes(value));
+                    
+                    if (matches.length > 0) {
+                        matches.forEach(player => {
+                            const item = document.createElement('div');
+                            item.className = 'suggestion-item';
+                            item.textContent = player;
+                            item.addEventListener('click', function() {
+                                input.value = player;
+                                dropdown.classList.remove('show');
+                            });
+                            dropdown.appendChild(item);
+                        });
+                        dropdown.classList.add('show');
+                    } else {
+                        dropdown.classList.remove('show');
+                    }
+                } else {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            input.addEventListener('focus', function() {
+                if (this.value === '') {
+                    dropdown.innerHTML = '';
+                    const players = getStoredPlayers();
+                    if (players.length > 0) {
+                        players.forEach(player => {
+                            const item = document.createElement('div');
+                            item.className = 'suggestion-item';
+                            item.textContent = player;
+                            item.addEventListener('click', function() {
+                                input.value = player;
+                                dropdown.classList.remove('show');
+                            });
+                            dropdown.appendChild(item);
+                        });
+                        dropdown.classList.add('show');
+                    }
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+
+        setupAutocomplete('t1p1name', 't1p1dropdown');
+        setupAutocomplete('t1p2name', 't1p2dropdown');
+        setupAutocomplete('t2p1name', 't2p1dropdown');
+        setupAutocomplete('t2p2name', 't2p2dropdown');
+
+        let state = {
+            gameType: 'klawerjas',
+            team1: { players: [], score: 0, ticks: [] },
+            team2: { players: [], score: 0, ticks: [] },
+            history: []
+        };
+
+        // Photo setup
+        function setupPhoto(gal, cam, prev) {
+            [gal, cam].forEach(id => {
+                document.getElementById(id).addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = e => {
+                            document.getElementById(prev).src = e.target.result;
+                            document.getElementById(prev).classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+        }
+
+        setupPhoto('t1p1gal', 't1p1cam', 't1p1prev');
+        setupPhoto('t1p2gal', 't1p2cam', 't1p2prev');
+        setupPhoto('t2p1gal', 't2p1cam', 't2p1prev');
+        setupPhoto('t2p2gal', 't2p2cam', 't2p2prev');
+
+        // Game selection
+        document.querySelectorAll('.game-tab').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.game-tab').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                state.gameType = this.dataset.game;
+            });
+        });
+
+        // Start game
+        document.getElementById('startBtn').addEventListener('click', function() {
+            // FULL RESET
+            state.team1.score = 0;
+            state.team1.ticks = [];
+            state.team2.score = 0;
+            state.team2.ticks = [];
+            state.history = [];
+
+            // Get names and save to storage
+            const t1p1name = document.getElementById('t1p1name').value || 'Player 1';
+            const t1p2name = document.getElementById('t1p2name').value || 'Player 2';
+            const t2p1name = document.getElementById('t2p1name').value || 'Player 1';
+            const t2p2name = document.getElementById('t2p2name').value || 'Player 2';
+
+            addPlayerToStorage(t1p1name);
+            addPlayerToStorage(t1p2name);
+            addPlayerToStorage(t2p1name);
+            addPlayerToStorage(t2p2name);
+
+            state.team1.players = [
+                { name: t1p1name, photo: document.getElementById('t1p1prev').src },
+                { name: t1p2name, photo: document.getElementById('t1p2prev').src }
+            ];
+            state.team2.players = [
+                { name: t2p1name, photo: document.getElementById('t2p1prev').src },
+                { name: t2p2name, photo: document.getElementById('t2p2prev').src }
+            ];
+
+            displayPlayers();
+            renderControls();
+            updateBoard();
+
+            document.getElementById('setupScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            document.getElementById('gameHeader').textContent = state.gameType.toUpperCase();
+        });
+
+        function displayPlayers() {
+            ['team1', 'team2'].forEach((team, idx) => {
+                const container = document.getElementById(`players${idx + 1}`);
+                container.innerHTML = '';
+                state[team].players.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'mini-player';
+                    div.innerHTML = `
+                        ${p.photo ? `<img src="${p.photo}">` : ''}
+                        <div class="pname">${p.name}</div>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        function renderControls() {
+            const ctrl = document.getElementById('controls');
+            if (state.gameType === 'klawerjas') {
+                ctrl.innerHTML = `
+                    <button class="ctrl-btn win" onclick="addScore('team1', 1, 'Win')">T1 Win (1)</button>
+                    <button class="ctrl-btn win" onclick="addScore('team2', 1, 'Win')">T2 Win (1)</button>
+                    <button class="ctrl-btn win" onclick="addScore('team1', 2, 'Win')">T1 Win (2)</button>
+                    <button class="ctrl-btn win" onclick="addScore('team2', 2, 'Win')">T2 Win (2)</button>
+                    <button class="ctrl-btn special" onclick="triggerAf('team1')">T1 Af</button>
+                    <button class="ctrl-btn special" onclick="triggerAf('team2')">T2 Af</button>
+                `;
+            } else {
+                ctrl.innerHTML = `
+                    <button class="ctrl-btn win" onclick="addScore('team1', 1, 'Win')">T1 Win</button>
+                    <button class="ctrl-btn win" onclick="addScore('team2', 1, 'Win')">T2 Win</button>
+                    <button class="ctrl-btn special" onclick="addScore('team1', 2, 'MILO')">T1 MILO</button>
+                    <button class="ctrl-btn special" onclick="addScore('team2', 2, 'MILO')">T2 MILO</button>
+                    <button class="ctrl-btn special" onclick="addScore('team1', 2, 'TEL')">T1 TEL</button>
+                    <button class="ctrl-btn special" onclick="addScore('team2', 2, 'TEL')">T2 TEL</button>
+                `;
+            }
+        }
+
+        function triggerAf(team) {
+            const otherTeam = team === 'team1' ? 'team2' : 'team1';
+            const prevOtherScore = state[otherTeam].score;
+            
+            state[team].score = 5;
+            state[team].ticks.push({ type: 'Af', timestamp: Date.now() });
+
+            state.history.push({
+                gameNumber: state.history.length + 1,
+                winner: team,
+                type: 'Af',
+                team1Score: state.team1.score,
+                team2Score: state.team2.score
+            });
+
+            updateBoard();
+
+            if (prevOtherScore === 0) {
+                showVark(otherTeam);
+                setTimeout(() => showResults(team), 3000);
+            } else {
+                setTimeout(() => showResults(team), 500);
+            }
+        }
+
+        function addScore(team, points, type) {
+            const otherTeam = team === 'team1' ? 'team2' : 'team1';
+            state[team].score += points;
+
+            for (let i = 0; i < points; i++) {
+                state[team].ticks.push({ type: type, timestamp: Date.now() + i });
+            }
+
+            state.history.push({
+                gameNumber: state.history.length + 1,
+                winner: team,
+                type: type,
+                team1Score: state.team1.score,
+                team2Score: state.team2.score
+            });
+
+            updateBoard();
+
+            // Check 6-0 DOUBLE VARK
+            if (state[team].score === 6 && state[otherTeam].score === 0) {
+                showVark(otherTeam, true);
+                setTimeout(() => showResults(team), 3000);
+            }
+            // Check 5-0 vark
+            else if (state[team].score === 5 && state[otherTeam].score === 0) {
+                showVark(otherTeam);
+                setTimeout(() => showResults(team), 3000);
+            }
+            // Check boom
+            else if (state[team].score >= 5) {
+                setTimeout(() => showResults(team), 500);
+            }
+        }
+
+        function updateBoard() {
+            const score1El = document.getElementById('score1');
+            const score2El = document.getElementById('score2');
+            
+            // Keep only the score number, preserve the edit button
+            score1El.innerHTML = `${state.team1.score}<button class="score-edit-btn" onclick="openScoreEdit('team1')" title="Edit score">✏️</button>`;
+            score2El.innerHTML = `${state.team2.score}<button class="score-edit-btn" onclick="openScoreEdit('team2')" title="Edit score">✏️</button>`;
+
+            updateTicks('team1');
+            updateTicks('team2');
+            updateBoom();
+        }
+        
+        let currentEditingTeam = null;
+        
+        function openScoreEdit(team) {
+            currentEditingTeam = team;
+            const currentScore = state[team].score;
+            const teamName = team === 'team1' ? 'Team 1' : 'Team 2';
+            
+            document.getElementById('scoreEditTitle').textContent = `Edit ${teamName} Score`;
+            document.getElementById('scoreEditInput').value = currentScore;
+            document.getElementById('scoreEditModal').classList.add('show');
+            
+            // Focus the input
+            setTimeout(() => {
+                document.getElementById('scoreEditInput').focus();
+                document.getElementById('scoreEditInput').select();
+            }, 100);
+        }
+        
+        function closeScoreEdit() {
+            document.getElementById('scoreEditModal').classList.remove('show');
+            currentEditingTeam = null;
+        }
+        
+        function saveScoreEdit() {
+            if (!currentEditingTeam) return;
+            
+            const newScore = parseInt(document.getElementById('scoreEditInput').value);
+            
+            if (isNaN(newScore) || newScore < 0 || newScore > 10) {
+                alert('Please enter a valid score between 0 and 10');
+                return;
+            }
+            
+            // Update the score
+            const oldScore = state[currentEditingTeam].score;
+            state[currentEditingTeam].score = newScore;
+            
+            // Adjust ticks to match new score
+            const tickDiff = newScore - oldScore;
+            if (tickDiff > 0) {
+                // Add ticks
+                for (let i = 0; i < tickDiff; i++) {
+                    state[currentEditingTeam].ticks.push({ type: 'Edit', timestamp: Date.now() + i });
+                }
+            } else if (tickDiff < 0) {
+                // Remove ticks
+                state[currentEditingTeam].ticks.splice(tickDiff);
+            }
+            
+            updateBoard();
+            closeScoreEdit();
+            
+            // Check if game should end
+            if (newScore >= 5) {
+                const otherTeam = currentEditingTeam === 'team1' ? 'team2' : 'team1';
+                if (newScore === 6 && state[otherTeam].score === 0) {
+                    setTimeout(() => {
+                        if (confirm('Team reached 6-0! Show results?')) {
+                            showVark(otherTeam, true);
+                            setTimeout(() => showResults(currentEditingTeam), 3000);
+                        }
+                    }, 300);
+                } else if (newScore === 5 && state[otherTeam].score === 0) {
+                    setTimeout(() => {
+                        if (confirm('Team reached 5-0! Show results?')) {
+                            showVark(otherTeam);
+                            setTimeout(() => showResults(currentEditingTeam), 3000);
+                        }
+                    }, 300);
+                } else if (newScore >= 5) {
+                    setTimeout(() => {
+                        if (confirm('Team reached BOOM! Show results?')) {
+                            showResults(currentEditingTeam);
+                        }
+                    }, 300);
+                }
+            }
+        }
+        
+        // Allow Enter key to save
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('scoreEditInput');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        saveScoreEdit();
+                    } else if (e.key === 'Escape') {
+                        closeScoreEdit();
+                    }
+                });
+            }
+            
+            // Close modal when clicking outside
+            document.getElementById('scoreEditModal')?.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeScoreEdit();
+                }
+            });
+        });
+
+        function updateTicks(team) {
+            const idx = team === 'team1' ? '1' : '2';
+            const container = document.getElementById(`ticks${idx}`);
+            container.innerHTML = '';
+
+            state[team].ticks.forEach(tick => {
+                const span = document.createElement('span');
+                span.className = 'tick';
+                span.innerHTML = '✓';
+                if (tick.type !== 'Win') {
+                    span.innerHTML += `<span class="tick-label">${tick.type}</span>`;
+                }
+                container.appendChild(span);
+            });
+        }
+
+        function updateBoom() {
+            const pips = document.querySelectorAll('.boom-pip');
+            pips.forEach((pip, i) => {
+                pip.classList.remove('t1', 't2', 'filled');
+                if (i < state.team1.score) {
+                    pip.classList.add('t1', 'filled');
+                } else if (i < state.team2.score) {
+                    pip.classList.add('t2', 'filled');
+                }
+            });
+        }
+
+        function showVark(losingTeam, isDouble = false) {
+            // Play pig oink sound
+            playPigOink();
+            
+            const panel = document.getElementById(losingTeam === 'team1' ? 'panel1' : 'panel2');
+            const pig = document.createElement('div');
+            pig.className = 'vark-anim';
+            pig.textContent = isDouble ? '🐷🐷' : '🐷';
+            const label = document.createElement('div');
+            label.className = 'vark-text';
+            label.textContent = isDouble ? 'DOUBLE VARK!' : 'VARK!';
+            panel.appendChild(pig);
+            panel.appendChild(label);
+            setTimeout(() => {
+                pig.remove();
+                label.remove();
+            }, 3000);
+        }
+
+        function playPigOink() {
+            try {
+                // Try to play the embedded MP3 sound
+                pigOinkSound.currentTime = 0;
+                pigOinkSound.play().catch(err => {
+                    console.log('Audio playback failed:', err);
+                });
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        function showResults(winner) {
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => createConfetti(), i * 35);
+            }
+
+            const winnerName = winner === 'team1' ? 'TEAM 1' : 'TEAM 2';
+            document.getElementById('winnerName').textContent = winnerName;
+
+            const isDoubleVark = (state.team1.score === 6 && state.team2.score === 0) || (state.team1.score === 0 && state.team2.score === 6);
+            const isVark = (state.team1.score === 5 && state.team2.score === 0) || (state.team1.score === 0 && state.team2.score === 5);
+
+            if (isDoubleVark) {
+                document.getElementById('finalScore1').textContent = state.team1.score === 0 ? '🐷🐷' : state.team1.score;
+                document.getElementById('finalScore2').textContent = state.team2.score === 0 ? '🐷🐷' : state.team2.score;
+                document.getElementById('scScore1').textContent = state.team1.score === 0 ? '🐷🐷' : state.team1.score;
+                document.getElementById('scScore2').textContent = state.team2.score === 0 ? '🐷🐷' : state.team2.score;
+            } else if (isVark) {
+                document.getElementById('finalScore1').textContent = state.team1.score === 0 ? '🐷' : state.team1.score;
+                document.getElementById('finalScore2').textContent = state.team2.score === 0 ? '🐷' : state.team2.score;
+                document.getElementById('scScore1').textContent = state.team1.score === 0 ? '🐷' : state.team1.score;
+                document.getElementById('scScore2').textContent = state.team2.score === 0 ? '🐷' : state.team2.score;
+            } else {
+                document.getElementById('finalScore1').textContent = state.team1.score;
+                document.getElementById('finalScore2').textContent = state.team2.score;
+                document.getElementById('scScore1').textContent = state.team1.score;
+                document.getElementById('scScore2').textContent = state.team2.score;
+            }
+
+            document.getElementById('scGame').textContent = state.gameType.toUpperCase();
+
+            // Players with ACTUAL NAMES
+            ['team1', 'team2'].forEach((team, idx) => {
+                const container = document.getElementById(`scPlayers${idx + 1}`);
+                container.innerHTML = '';
+                state[team].players.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'sc-player';
+                    div.innerHTML = `
+                        ${p.photo ? `<img src="${p.photo}">` : ''}
+                        <div class="name">${p.name}</div>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+        }
+
+        function createConfetti() {
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.animationDelay = Math.random() * 3 + 's';
+            c.style.background = ['#00A86B', '#FF6B35', '#FFA500', '#DC143C'][Math.floor(Math.random() * 4)];
+            document.body.appendChild(c);
+            setTimeout(() => c.remove(), 3000);
+        }
+
+        function downloadCard() {
+            const card = document.getElementById('shareCard');
+            
+            // Temporarily show the card for capture
+            card.style.display = 'flex';
+            
+            // Use 800x800 instead of 1080x1080 to reduce file size
+            const originalWidth = card.style.width;
+            const originalHeight = card.style.height;
+            card.style.width = '800px';
+            card.style.height = '800px';
+            
+            html2canvas(card, { 
+                backgroundColor: '#00A86B',
+                scale: 1.5,  // Reduced from 2 to save file size
+                width: 800,
+                height: 800,
+                windowWidth: 800,
+                windowHeight: 800,
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                // Restore original size and hide again
+                card.style.width = originalWidth;
+                card.style.height = originalHeight;
+                card.style.display = 'none';
+                
+                const link = document.createElement('a');
+                link.download = `boom-${Date.now()}.jpg`;
+                // Reduce quality to 0.8 to compress file size
+                link.href = canvas.toDataURL('image/jpeg', 0.8);  // Using JPEG with 80% quality
+                link.click();
+            });
+        }
+
+        function resetGame() {
+            if (confirm('Reset current game?')) {
+                state.team1.score = 0;
+                state.team1.ticks = [];
+                state.team2.score = 0;
+                state.team2.ticks = [];
+                state.history = [];
+                updateBoard();
+            }
+        }
+
+        function endGame() {
+            if (confirm('End game and view results?')) {
+                const winner = state.team1.score >= state.team2.score ? 'team1' : 'team2';
+                showResults(winner);
+            }
+        }
+
+        function newGame() {
+            state.team1.score = 0;
+            state.team1.ticks = [];
+            state.team2.score = 0;
+            state.team2.ticks = [];
+            state.history = [];
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('setupScreen').style.display = 'block';
+        }
+    </script>
+
+    <script>
+        // Service Worker (PWA offline support)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        // Show native share button if Web Share API is available
+        window.addEventListener('DOMContentLoaded', () => {
+            if (navigator.share) {
+                const btn = document.getElementById('nativeShareBtn');
+                if (btn) btn.style.display = 'inline-flex';
+            }
+        });
+
+        // Web Share API
+        function nativeShare() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Boom Scorer – Klawerjas & Dominoes',
+                    text: 'Track your Klawerjas and Dominoes scores!',
+                    url: 'https://boomscorer.fastbusiness.co.za'
+                }).catch(err => console.log('Share cancelled', err));
+            }
+        }
+    </script>
+</body>
+</html>
